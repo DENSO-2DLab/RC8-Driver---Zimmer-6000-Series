@@ -1,4 +1,5 @@
 '!TITLE "Denso robot program"
+#Include "Variant.h"
 
 Dim IRStrAddr(4) As Integer
 Dim HRStrAddr(4) As Integer
@@ -39,128 +40,135 @@ Sub Main
 
 End Sub
 
+'
+' ZConnet
+'
 Function ZConnect(IOMasterIPAddr As String, PortNo As Integer, IRStrAddr As Integer, HRStrAddr As Integer) As Variant
-	Dim CaoCtrl As Object			' IOLink Master Connection
-	Dim CaoExt As Object			' PortNo Connection
-	Dim CaoVar As Object			' Sensor Parameter Connection
-	
-	Dim InputData(2) As String		' Input Registers (For Future Reference)	
-	Dim OutputData(7) As String		' Holding Registers	(For Future Reference)
+	Dim IOMaster As Object									' CaoController Name (For Future Reference)
+	Dim InputData(2) As Object								' Input Registers (For Future Reference)	
+	Dim OutputData(7) As Object								' Holding Registers	(For Future Reference)
+	Dim IOPort As Object									' IOLink Port Channel
 		
-	' CaoController Parameters
-	Dim IOMaster As String = ""		' CaoController Name (For Future Reference)
-	IOMaster = IOMasterIPAddr
-	Dim caoProv As String = "CaoProv.Modbus.X"
-	IOMasterIPAddr = Sprintf("Conn=eth:%s, @IfNotMember", IOMasterIPAddr)
-	
 	' CaoExtension Parameters
-	Dim ZimExt As String = ""		' CaoExtension Name (For Future Reference)
-	Dim ExtOpt As String = ""		' CaoExtension Option
-	ZimExt = Sprintf("Zim%d", PortNo)
-	ExtOpt = Sprintf("UnitAddress=%d, @IfNotMember", PortNo)	
+	Dim ZimID As String										' CaoExtension Name (For Future Reference)
+	ZimID = Sprintf("Zim%d", PortNo)
 
 	' Internal Variables
-	Dim n As Integer = 0
-		
-	CaoCtrl = Cao.AddController("", caoProv, "", IOMasterIPAddr)	' Initialize IO-Link Master (CaoController)
-	CaoExt = CaoCtrl.AddExtension(ZimExt, ExtOpt)					' Iniialize PortNo (CaoExtension)
+	Dim regAddr As String		
+	Dim n As Integer = 0									' Loop Counter 
 
-	' Initialize Input Registers
+	IOMaster = Cao_AddController(IOMasterIPAddr)			' Initialize IO-Link Master (CaoController)
+	IOPort = Cao_AddExtension(IOMaster, ZimID)				' Iniialize PortNo (CaoExtension)
+	
 	For n = 0 To Ubound(InputData) 
-		InputData(n) = Sprintf("IRI%d", (IRStrAddr+n))
-		CaoVar = CaoExt.AddVariable(InputData(n), "@IfNotMember")
+		regAddr = Sprintf("IRI%d", (IRStrAddr+n))
+		InputData(n) = Cao_AddVariable(IOPort, regAddr)		' Initialize Input Registers
 	Next n
 
-	' Initialize Holding Registers
 	For n = 0 To Ubound(OutputData)
-		OutputData(n) = Sprintf("HRI%d",(HRStrAddr+n))
-		CaoVar = CaoExt.AddVariable(OutputData(n), "@IfNotMember")
+		regAddr = Sprintf("HRI%d",(HRStrAddr+n))
+		OutputData(n) = Cao_AddVariable(IOPort, regAddr)	' Initialize Holding Registers
 	Next n
-
-	' Output CAO Object Data
-	ZConnect = Array(IOMaster,ZimExt, InputData, OutputData)						    
-
+	
+	' Build Output Data
+	ZConnect = CreateArray(4, VT_VARIANT)
+	ZConnect(0) = IOMaster
+	ZConnect(1) = IOPort
+	ZConnect(2) = InputData							
+	ZConnect(3) = OutputData						
 End Function
 
+' ---------------------------INPUT REGISTERS------------------------------------------------------
+
+'
 ' Get Zimmer Gripper Status
+'
 Function ZGet_Status(ZGripper As Variant) As Integer
-	Dim IOMasterID As String
-	Dim GripperID As String
-	Dim IRIArray As Variant 
-	Dim Var_ID As String
-
-	IOMasterID = ZGripper(0)
-	GripperID = ZGripper(1)
-	IRIArray = ZGripper(2)
-	Var_ID = IRIArray(0)
-
-	ZGet_Status = GetCaoVariable(IOMasterID, GripperID, Var_ID)
+	Dim RegisterNo As Object
+	RegisterNo = zExtractObjElement(ZGripper, 2, 0)	' Extract First Element of Input Data Array
+	ZGet_Status = Cao_GetVariable(RegisterNo)		' Read Status Word
 End Function
 
+'
 ' Get Zimmer Gripper Diagnostic (Error)
+'
 Function ZGet_Diagnostics(ZGripper As Variant) As Integer
-	Dim IOMasterID As String
-	Dim GripperID As String
-	Dim IRIArray As Variant 
-	Dim Var_ID As String
-
-	IOMasterID = ZGripper(0)
-	GripperID = ZGripper(1)
-	IRIArray = ZGripper(2)
-	Var_ID = IRIArray(1)
-
-	ZGet_Diagnostics = GetCaoVariable(IOMasterID, GripperID, Var_ID)
+	Dim RegisterNo As Object
+	RegisterNo = zExtractObjElement(ZGripper, 2, 1)	' Extract Second Element of Input Data Array
+	ZGet_Diagnostics = Cao_GetVariable(RegisterNo)	' Read Diagnostics Word
 End Function
 
+'
 ' Get Zimmer Gripper Current Position
+'
 Function ZGet_CurPos(ZGripper As Variant) As Integer
-	Dim IOMasterID As String
-	Dim GripperID As String
-	Dim IRIArray As Variant 
-	Dim Var_ID As String
-
-	IOMasterID = ZGripper(0)
-	GripperID = ZGripper(1)
-	IRIArray = ZGripper(2)
-	Var_ID = IRIArray(2)
-
-	ZGet_CurPos = GetCaoVariable(IOMasterID, GripperID, Var_ID)
+	Dim RegisterNo As Object
+	RegisterNo = zExtractObjElement(ZGripper, 2, 3)	' Extract Second Element of Input Data Array
+	ZGet_CurPos = Cao_GetVariable(RegisterNo)		' Read Diagnostics Word
 End Function
 
-' --------------CAO FUNCTIONS--------------------------------------
+'-----------------------------HOLDING REGISTERS----------------------------------------------------
+
+
+
+
+' --------------PRIVATE FUNCTIONS------------------------------------------------------------------
+Function zExtractObjElement(ObjArray As Variant, RowIndex As Integer, ColumnIndex As Integer) As Object
+	Dim InputDataArray As Variant
+	Dim RegisterNo As Object
+			
+	InputDataArray = ObjArray(RowIndex)				' Extract InputData Array
+	RegisterNo = InputDataArray(ColumnIndex)		' Extract First Element of Input Data Array
+
+	zExtractObjElement = RegisterNo
+End Function
+
+' --------------CAO FUNCTIONS----------------------------------------------------------------------
+'
+' CaoWorkspace::AddController()
+'
 Function Cao_AddController(IOMasterIPAddr As String) As Object
 	Dim caoCtrlName As String
 	Dim caoProv As String
 	
+	' CaoController Parameters
 	caoCtrlName = IOMasterIPAddr
 	caoProv = "CaoProv.Modbus.X"
 	IOMasterIPAddr = Sprintf("Conn=eth:%s, @IfNotMember", IOMasterIPAddr)
 
-	Cao_AddController = Cao.AddController("", caoProv, "", IOMasterIPAddr)	' Initialize IO-Link Master (CaoController)
+	Cao_AddController = Cao.AddController(caoCtrlName, caoProv, "", IOMasterIPAddr)
 End Function
 
+'
+' CaoController::AddExtension()
+'
 Function Cao_AddExtension(CaoCtrl As Object, ZimExt As String) As Object
 	' CaoExtension Parameters
-	Dim ExtOpt As String = ""		' CaoExtension Option
+	Dim ExtOpt As String					' CaoExtension Option
 	ExtOpt = Sprintf("UnitAddress=%d, @IfNotMember", Right(ZimExt,1))
 
-	Cao_AddExtension = CaoCtrl.AddExtension(ZimExt, ExtOpt)					' Iniialize PortNo (CaoExtension)
+	Cao_AddExtension = CaoCtrl.AddExtension(ZimExt, ExtOpt)							
 End Function
 
+'
+' CaoExtension::AddVariable
+'
 Function Cao_AddVariable(CaoExt As Object, CaoVarName As String) As Object
 	 Cao_AddVariable = CaoExt.AddVariable(CaoVarName, "@IfNotMember")
 End Function
 
-Function GetCaoVariable(IOMaster As String, ZimExt As String, RegisterNo As String) As Integer
-	Dim CaoCtrl As Object
-	Dim CaoExt As Object
-	Dim CaoVar As Object
+'
+' CaoVariable.Value (Get)
+'
+Function Cao_GetVariable(CaoVar As Object) As Integer
+	Cao_GetVariable = CaoVar.Value
+End Function
 
-	CaoCtrl = Cao_AddController(IOMaster)
-	CaoExt = Cao_AddExtension(CaoCtrl, ZimExt)
-	CaoVar = Cao_AddVariable(CaoExt, RegisterNo)
-
-	GetCaoVariable = CaoVar.Value
+'
+' CaoVariable.Value (Set)
+'
+Function Cao_SetVariable(CaoVar As Object, newValue As Variant) As Integer
+	CaoVar.Value = newValue
 End Function
 
 
