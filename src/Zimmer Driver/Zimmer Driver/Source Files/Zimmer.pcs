@@ -1,5 +1,5 @@
 '!TITLE "Denso robot program"
-#Include "Variant.h"
+#Include "Zimmer.h"
 
 Dim IRStrAddr(4) As Integer
 Dim HRStrAddr(4) As Integer
@@ -70,50 +70,79 @@ Sub Main
 	teach_position = ZGet_TeachPose(fResult)
 	work_position = ZGet_WorkPose(fResult)
 
-	' --- HOLDING REGISTERS (WRITE) --- 
-	Call ZSet_CtrlWord(fResult, 1)
-	Call ZSet_DeviceMode(fResult, 1)
-	Call ZSet_WorkpieceNo(fResult, 1)
-	Call ZSet_PoseTolerance(fResult, 1)
-	Call ZSet_GripForce(fResult, 1)
-	Call ZSet_DriveVelocity(fResult, 1)
-	Call ZSet_BasePose(fResult, 1)
-	Call ZSet_ShiftPose(fResult, 1)
-	Call ZSet_TeachPose(fResult, 1)
-	Call ZSet_WorkPose(fResult, 1)
+'	' --- HOLDING REGISTERS (WRITE) --- 
+'	Call ZSet_CtrlWord(fResult, 1)
+'	Call ZSet_DeviceMode(fResult, 1)
+	Call ZSet_WorkpieceNo(fResult, 33)
+'	Call ZSet_PoseTolerance(fResult, 1)
+'	Call ZSet_GripForce(fResult, 1)
+'	Call ZSet_DriveVelocity(fResult, 1)
+'	Call ZSet_BasePose(fResult, 1)
+'	Call ZSet_ShiftPose(fResult, 1)
+'	Call ZSet_TeachPose(fResult, 1)
+'	Call ZSet_WorkPose(fResult, 1)
+
+	' Set Motion Profile
+'	Dim fMoveResult As Integer
+'	Call ZMotor(fResult, 0)
+''	fMoveResult = ZSet_PositionProfile(fResult, 100, 1, 30)
+' 	fMoveResult = ZSetMotionParam(fResult, 60, 1, 50, 100, 1, 20, 30, 30)
+'
+'	Call ZMotor(fResult, 1)
+'	Call ZClose(fResult)
+'	Call ZOpen(fResult)
+'	Call ZClose(fResult)
+'	Call ZOpen(fResult)
+'	Call ZClose(fResult)
+'	Call ZOpen(fResult)
 
 '	Call ZSet_CtrlWord(fResult, 256)
 '	Call ZSet_CtrlWord(fResult, 512)
 End Sub
 
-'
+'----------------------------------------------------------------------------------------
 ' ZConnet
-'
-Function ZConnect(IOMasterIPAddr As String, PortNo As Integer, IRStrAddr As Integer, HRStrAddr As Integer) As Variant
-	Dim IOMaster As Object									' CaoController Name (For Future Reference)
-	Dim InputData(2) As Object								' Input Registers (For Future Reference)	
-	Dim OutputData(7) As Object								' Holding Registers	(For Future Reference)
-	Dim IOPort As Object									' IOLink Port Channel
-		
-	' CaoExtension Parameters
-	Dim ZimID As String										' CaoExtension Name (For Future Reference)
+'----------------------------------------------------------------------------------------
+Function ZConnect(IOMasterIPAddr As String,_
+				  PortNo As Integer,_
+				  IRStrAddr As Integer,_
+				  HRStrAddr As Integer)_
+				  As Variant
+
+	' Validate New Data (If not Throw Error)
+	If zIPValid(IOMasterIPAddr) = 0 Then Err.Raise &h8150001B	'Incorrect Argument
+	
+	Dim IOMaster As Object				' IOLInk Master Object Reference 
+	Dim IOPort As Object				' IOLink Port Channel Reference 
+	Dim ZimID As String					' CaoExtension Name (For Future Reference)
 	ZimID = Sprintf("Zim%d", PortNo)
 
+	' Initialize IO-Link Master (CaoController)
+	IOMaster = Cao_AddController(IOMasterIPAddr)	
+	
+	' Iniialize PortNo (CaoExtension)
+	IOPort = Cao_AddExtension(IOMaster, ZimID)		
+		
 	' Internal Variables
 	Dim regAddr As String		
-	Dim n As Integer = 0									' Loop Counter 
+	Dim n As Integer = 0			' Loop Counter 
 
-	IOMaster = Cao_AddController(IOMasterIPAddr)			' Initialize IO-Link Master (CaoController)
-	IOPort = Cao_AddExtension(IOMaster, ZimID)				' Iniialize PortNo (CaoExtension)
-	
+	' Input Registers (For Future Reference)	
+	Dim InputData(2) As Object		
 	For n = 0 To Ubound(InputData) 
-		regAddr = Sprintf("IRI%d", (IRStrAddr+n))
-		InputData(n) = Cao_AddVariable(IOPort, regAddr)		' Initialize Input Registers
+		regAddr = Sprintf("IRI%d", (IRStrAddr + n))
+
+		' Initialize Input Registers
+		InputData(n) = Cao_AddVariable(IOPort, regAddr)		
 	Next n
 
+	' Holding Registers	(For Future Reference)
+	Dim OutputData(7) As Object		
 	For n = 0 To Ubound(OutputData)
-		regAddr = Sprintf("HRI%d",(HRStrAddr+n))
-		OutputData(n) = Cao_AddVariable(IOPort, regAddr)	' Initialize Holding Registers
+		regAddr = Sprintf("HRI%d",(HRStrAddr + n))
+		
+		' Initialize Holding Registers
+		OutputData(n) = Cao_AddVariable(IOPort, regAddr)	
 	Next n
 	
 	' Build Output Data
@@ -121,435 +150,207 @@ Function ZConnect(IOMasterIPAddr As String, PortNo As Integer, IRStrAddr As Inte
 	ZConnect(0) = IOMaster
 	ZConnect(1) = IOPort
 	ZConnect(2) = InputData							
-	ZConnect(3) = OutputData						
+	ZConnect(3) = OutputData
 End Function
 
-' ---------------------------INPUT REGISTERS------------------------------------------------------
-
-'
-' Get Zimmer Gripper Status
-'
-Function ZGet_Status(ZGripper As Variant) As Integer
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 2, 0)	' Extract First Element of Input Data Array
-	ZGet_Status = Cao_GetVariable(RegisterNo)		' Read Status Word
-End Function
-
-'
-' ZGet_HomePoseOK_Status
-' 
-Function ZGet_HomePoseOK_Status(ZGripper As Variant) As Integer
-	ZGet_HomePoseOK_Status = zExtractBit(ZGet_Status(ZGripper), 0)
-End Function
-
-'
-' ZGet_MotorOn_Status
-'
-Function ZGet_MotorOn_Status(ZGripper As Variant) As Integer
-	ZGet_MotorOn_Status = zExtractBit(ZGet_Status(ZGripper), 1)
-End Function
-
-' 
-' ZGet_InMotion_Status
-'
-Function ZGet_InMotion_Status(ZGripper As Variant) As Integer
-	ZGet_InMotion_Status = zExtractBit(ZGet_Status(ZGripper), 2)
-End Function
-
-'
-' ZGet_CompleteMovement_Status
-'
-Function ZGet_CompleteMovement_Status(ZGripper As Variant) As Integer
-	ZGet_CompleteMovement_Status = zExtractBit(ZGet_Status(ZGripper), 3)
-End Function
-
-'
-' ZGet_NJogModeActive_Status
-'
-Function ZGet_NJogModeActive_Status(ZGripper As Variant) As Integer
-	ZGet_NJogModeActive_Status = zExtractBit(ZGet_Status(ZGripper), 4)
-End Function
-
-'
-' ZGet_PJogModeActive_Status
-'
-Function ZGet_PJogModeActive_Status(ZGripper As Variant) As Integer
-	ZGet_PJogModeActive_Status = zExtractBit(ZGet_Status(ZGripper), 5)
-End Function
-
-'
-' ZGet_GripCtrlSysActive_Status
-'
-Function ZGet_GripCtrlSysActive_Status(ZGripper As Variant) As Integer
-	ZGet_GripCtrlSysActive_Status = zExtractBit(ZGet_Status(ZGripper), 6)
-End Function
-
-'
-' ZGet_CtrlError_Status
-'
-Function ZGet_CtrlError_Status(ZGripper As Variant) As Integer
-	ZGet_CtrlError_Status = zExtractBit(ZGet_Status(ZGripper), 7)
-End Function
-
-'
-' ZGet_BasePose_Status
-'
-Function ZGet_BasePose_Status(ZGripper As Variant) As Integer
-	ZGet_BasePose_Status = zExtractBit(ZGet_Status(ZGripper), 8)
-End Function
-
-' 
-' ZGet_TeachPose_Status
-'
-Function ZGet_TeachPose_Status(ZGripper As Variant) As Integer
-	ZGet_TeachPose_Status = zExtractBit(ZGet_Status(ZGripper), 9)
-End Function
-
-' 
-' ZGet_WorkPose_Status
-'
-Function ZGet_WorkPose_Status(ZGripper As Variant) As Integer
-	ZGet_WorkPose_Status = zExtractBit(ZGet_Status(ZGripper), 10)
-End Function
-
-'
-' ZGet_UndefPose_Status
-'
-Function ZGet_UndefPose_Status(ZGripper As Variant) As Integer
-	ZGet_UndefPose_Status = zExtractBit(ZGet_Status(ZGripper), 11)
-End Function
-
-'
-' ZGet_DataTransferOK_Status
-'
-Function ZGet_DataTransferOK_Status(ZGripper As Variant) As Integer
-	ZGet_DataTransferOK_Status = zExtractBit(ZGet_Status(ZGripper), 12)
-End Function
-
-'
-' ZGet_CtrlWordx100_Status
-'
-Function ZGet_CtrlWordx100_Status(ZGripper As Variant) As Integer
-	ZGet_CtrlWordx100_Status = zExtractBit(ZGet_Status(ZGripper), 13)
-End Function
-
-'
-' ZGet_CtrlWordx200_Status
-'
-Function ZGet_CtrlWordx200_Status(ZGripper As Variant) As Integer
-	ZGet_CtrlWordx200_Status = zExtractBit(ZGet_Status(ZGripper), 14)
-End Function 
-
-'
-' ZGet_Error_Status
-'
-Function ZGet_Error_Status(ZGripper As Variant) As Integer
-	ZGet_Error_Status = zExtractBit(ZGet_Status(ZGripper), 15)
-End Function
-
-'
-' Get Zimmer Gripper Diagnostic (Error)
-'
-Function ZGet_Diagnostics(ZGripper As Variant) As Integer
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 2, 1)	' Extract Second Element of Input Data Array
-	ZGet_Diagnostics = Cao_GetVariable(RegisterNo)	' Read Diagnostics Word
-End Function
-
-'
-' Get Zimmer Gripper Current Position
-'
-Function ZGet_CurPos(ZGripper As Variant) As Single
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 2, 2)		' Extract Second Element of Input Data Array
-	ZGet_CurPos = Cao_GetVariable(RegisterNo)*0.01		' Read Diagnostics Word (Scale to 0.01mm)
-End Function
-
-'-----------------------------HOLDING REGISTERS (READ)------------------------------------------------
-'
-' Get Zimmer Control Word Parameter
-'
-Function ZGet_CtrlWord(ZGripper As Variant) As Integer
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 3, 0)		' Extract 1st Element of Output Data Array
-	ZGet_CtrlWord = Cao_GetVariable(RegisterNo)			' Read Control Word Parameter Value
-End Function
-
-'
-' ZGet_DeviceMode
-'
-Function ZGet_DeviceMode(ZGripper As Variant) As Integer
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 3, 1)		' Extract 2nd Element of Output Data Array
-	ZGet_DeviceMode = Cao_GetVariable(RegisterNo)		' Read Control Word Parameter Value
-End Function
-
-'
-' ZGet_WorkpieceNo
-'
-Function ZGet_WorkpieceNo(ZGripper As Variant) As Integer
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 3, 1)		' Extract 3rd Element of Output Data Array
-	ZGet_WorkpieceNo = Cao_GetVariable(RegisterNo)		' Read Control Word Parameter Value
-End Function
-
-'
-' ZGet_PoseTolerance
-'
-Function ZGet_PoseTolerance(ZGripper As Variant) As Integer
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 3, 2)		' Extract 5th Element of Output Data Array
-	ZGet_PoseTolerance = Cao_GetVariable(RegisterNo)	' Read Control Word Parameter Value
-End Function
-
-'
-' ZGet_GripForce
-'
-Function ZGet_GripForce(ZGripper As Variant) As Integer
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 3, 3)	' Extract 6th Element of Output Data Array
-	ZGet_GripForce = Cao_GetVariable(RegisterNo)	' Read Control Word Parameter Value
-End Function
-
-'
-' ZGet_DriveVelocity
-'
-Function ZGet_DriveVelocity(ZGripper As Variant) As Integer
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 3, 3)		' Extract 7th Element of Output Data Array
-	ZGet_DriveVelocity = Cao_GetVariable(RegisterNo)	' Read Control Word Parameter Value
-End Function
-
-'
-' ZGet_BasePose
-'
-Function ZGet_BasePose(ZGripper As Variant) As Single
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 3, 4)		' Extract 8th Element of Output Data Array
-	ZGet_BasePose = Cao_GetVariable(RegisterNo)*0.01	' Read Control Word Parameter Value (Scale to nearest 0.01mm)
-End Function
-
-'
-' ZGet_ShiftPose
-'
-Function ZGet_ShiftPose(ZGripper As Variant) As Single
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 3, 5)		' Extract 9th Element of Output Data Array
-	ZGet_ShiftPose = Cao_GetVariable(RegisterNo)*0.01	' Read Control Word Parameter Value (Scale to nearest 0.01mm)
-End Function
-
-'
-' ZGet_TeachPose
-'
-Function ZGet_TeachPose(ZGripper As Variant) As Single
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 3, 6)		' Extract 10th Element of Output Data Array
-	ZGet_TeachPose = Cao_GetVariable(RegisterNo)*0.01	' Read Control Word Parameter Value (Scale to nearest 0.01mm)
-End Function
-
-'
-' ZGet_WorkPose
-'
-Function ZGet_WorkPose(ZGripper As Variant) As Single
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 3, 7)		' Extract 11th Element of Output Data Array
-	ZGet_WorkPose = Cao_GetVariable(RegisterNo)*0.01	' Read Control Word Parameter Value (Scale to nearest 0.01mm)
-End Function
-
-'-----------------------------HOLDING REGISTERS (WRITE)------------------------------------------------
-'
-' ZSet_CtrlWord
-'
-Function ZSet_CtrlWord(ZGripper As Variant, newValue As Variant) As Integer 
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 3, 0)			' Extract 1st Element of Output Data Array	
-	ZSet_CtrlWord = Cao_SetVariable(RegisterNo, newValue)	' Write to Control Word Parameter Variable
-End Function
-
-'
-' ZSet_DeviceMode
-'
-Function ZSet_DeviceMode(ZGripper As Variant, newValue As Variant) As Integer
-	Dim RegisterNo As Object
-	Dim currValue As Variant
-	RegisterNo = zExtractObjElement(ZGripper, 3, 1)			' Extract 2nd Element of Output Data Array	
+'----------------------------------------------------------------------------------------
+' ZIdle
+'----------------------------------------------------------------------------------------
+Function ZIdle(ZGripper As Variant) As Integer
+	Call ZSet_CtrlWord(ZGripper, 1)		' Start Transfer Data
+	Call ZSet_DeviceMode(ZGripper, 1)	' Set DeviceMode to Idle
+	Call ZSet_CtrlWord(ZGripper, 0)		' Stop Transfer Data
 	
-	currValue =  Cao_GetVariable(RegisterNo)				' Read Current Value (16 bit)
-	currValue = currValue AND &h00FF						' Clear MSBs (Top Byte)
-	newValue = newValue << 8								' Shift new value to MSB (Top Byte)
-	newValue = newValue OR currValue						' Merge new MSB with curr LSB
-
-	ZSet_DeviceMode = Cao_SetVariable(RegisterNo, newValue)	' Write to Control Word Parameter Variable
+	ZIdle = ZGet_Error_Status(ZGripper)	' Return Error Status
 End Function
 
-'
-' ZSet_WorkpieceNo
-'
-Function ZSet_WorkpieceNo(ZGripper As Variant, newValue As Variant) As Integer
-	Dim RegisterNo As Object
-	Dim currValue As Variant
-	RegisterNo = zExtractObjElement(ZGripper, 3, 1)				' Extract 2nd Element of Output Data Array	
+'----------------------------------------------------------------------------------------
+' ZGripperReset
+'----------------------------------------------------------------------------------------
+Function ZGripperReset(ZGripper As Variant) As Integer
+	Call ZSet_CtrlWord(ZGripper, 1)					' Start Transfer Data
+
+	Dim currDeviceMode As Variant
+	currDeviceMode = ZGet_DeviceMode(ZGripper)
+	Call ZSet_DeviceMode(ZGripper, 2)				' Set DeviceMode to Gripper Reset
+	Call ZSet_DeviceMode(ZGripper, currDeviceMode)	' Set DeviceMode to Previous Mode
 	
-	currValue =  Cao_GetVariable(RegisterNo)					' Read Current Value (16 bit)
-	currValue = currValue AND &hFF00							' Clear LSBs (Bottom Byte)
-	newValue = newValue OR currValue							' Merge new LSB with curr MSB
+	Call ZSet_CtrlWord(ZGripper, 0)					' Stop Transfer Data
 
-	ZSet_WorkpieceNo = Cao_SetVariable(RegisterNo, newValue)	' Write to Control Word Parameter Variable
+	ZGripperReset = ZGet_Error_Status(ZGripper)		' Return Error Status
 End Function
 
-'
-' ZSet_PoseTolerance
-'
-Function ZSet_PoseTolerance(ZGripper As Variant, newValue As Variant) As Integer
-	Dim RegisterNo As Object
-	Dim currValue As Variant
-	RegisterNo = zExtractObjElement(ZGripper, 3, 2)				' Extract 3rd Element of Output Data Array	
+'----------------------------------------------------------------------------------------
+' ZResetDirFlag
+'----------------------------------------------------------------------------------------
+Function ZResetDirFlag(ZGripper As Variant) As Integer
+	' Direction Flag Reset
+	Call ZSet_CtrlWord(ZGripper, 4)					
 	
-	currValue =  Cao_GetVariable(RegisterNo)					' Read Current Value (16 bit)
-	currValue = currValue AND &hFF00							' Clear LSBs (Bottom Byte)
-	newValue = newValue OR currValue							' Merge new LSB with curr MSB
-
-	ZSet_PoseTolerance = Cao_SetVariable(RegisterNo, newValue)	' Write to Control Word Parameter Variable
+	' Return Error Status
+	ZResetDirFlag = ZGet_Error_Status(ZGripper)
 End Function
 
-'
-' ZSet_DeviceMode
-'
-Function ZSet_GripForce(ZGripper As Variant, newValue As Variant) As Integer
-	Dim RegisterNo As Object
-	Dim currValue As Variant
-	RegisterNo = zExtractObjElement(ZGripper, 3, 3)			' Extract 4th Element of Output Data Array	
+'----------------------------------------------------------------------------------------
+' ZMotor
+'----------------------------------------------------------------------------------------
+Function ZMotor(ZGripper As Variant, zMotorState As Integer) As Integer
+	Call ZSet_CtrlWord(ZGripper, 1)					' Start Transfer Data
+
+	Dim currDeviceMode As Variant
+	currDeviceMode = ZGet_DeviceMode(ZGripper)
 	
-	currValue =  Cao_GetVariable(RegisterNo)				' Read Current Value (16 bit)
-	currValue = currValue AND &h00FF						' Clear MSBs (Top Byte)
-	newValue = newValue << 8								' Shift new value to MSB (Top Byte)
-	newValue = newValue OR currValue						' Merge new MSB with curr LSB
-
-	ZSet_GripForce = Cao_SetVariable(RegisterNo, newValue)	' Write to Control Word Parameter Variable
-End Function
-
-'
-' ZSet_DriveVelocity
-'
-Function ZSet_DriveVelocity(ZGripper As Variant, newValue As Variant) As Integer
-	Dim RegisterNo As Object
-	Dim currValue As Variant
-	RegisterNo = zExtractObjElement(ZGripper, 3, 3)				' Extract 4th Element of Output Data Array	
-	
-	currValue =  Cao_GetVariable(RegisterNo)					' Read Current Value (16 bit)
-	currValue = currValue AND &hFF00							' Clear LSBs (Bottom Byte)
-	newValue = newValue OR currValue							' Merge new LSB with curr MSB
-
-	ZSet_DriveVelocity = Cao_SetVariable(RegisterNo, newValue)	' Write to Control Word Parameter Variable
-End Function
-
-'
-' ZSet_BasePose
-'
-Function ZSet_BasePose(ZGripper As Variant, newValue As Variant) As Integer 
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 3, 4)			' Extract 5th Element of Output Data Array	
-	ZSet_BasePose = Cao_SetVariable(RegisterNo, newValue)	' Write to Control Word Parameter Variable
-End Function
-
-'
-' ZSet_ShiftPose
-'
-Function ZSet_ShiftPose(ZGripper As Variant, newValue As Variant) As Integer 
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 3, 5)			' Extract 6th Element of Output Data Array	
-	ZSet_ShiftPose = Cao_SetVariable(RegisterNo, newValue)	' Write to Control Word Parameter Variable
-End Function
-
-'
-' ZSet_TeachPose
-'
-Function ZSet_TeachPose(ZGripper As Variant, newValue As Variant) As Integer 
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 3, 6)			' Extract 7th Element of Output Data Array	
-	ZSet_TeachPose = Cao_SetVariable(RegisterNo, newValue)	' Write to Control Word Parameter Variable
-End Function
-
-'
-' ZSet_WorkPose
-'
-Function ZSet_WorkPose(ZGripper As Variant, newValue As Variant) As Integer 
-	Dim RegisterNo As Object
-	RegisterNo = zExtractObjElement(ZGripper, 3, 7)			' Extract 8th Element of Output Data Array	
-	ZSet_WorkPose = Cao_SetVariable(RegisterNo, newValue)	' Write to Control Word Parameter Variable
-End Function
-
-' --------------PRIVATE FUNCTIONS------------------------------------------------------------------
-Function zExtractObjElement(ObjArray As Variant, RowIndex As Integer, ColumnIndex As Integer) As Object
-	Dim InputDataArray As Variant
-	Dim RegisterNo As Object
-			
-	InputDataArray = ObjArray(RowIndex)				' Extract InputData Array
-	RegisterNo = InputDataArray(ColumnIndex)		' Extract First Element of Input Data Array
-
-	zExtractObjElement = RegisterNo
-End Function
-
-Function zExtractBit(Number As Integer, Digit As Integer) As Integer
-	zExtractBit = Number AND Pow(2, Digit)
-	
-	If (zExtractBit) Then
-		zExtractBit = 1
+	If zMotorState = 1 Then 
+		' Set DeviceMode to Swith off Motor / Stop Gripper Movement
+		Call ZSet_DeviceMode(ZGripper, 3)
+		Wait ZGet_MotorOn_Status(ZGripper) = 1
 	Else
-		zExtractBit = 0
+		Call ZSet_DeviceMode(ZGripper, 5)	
+		Wait ZGet_MotorOn_Status(ZGripper) = 0
+	End If 
+
+	Call ZSet_DeviceMode(ZGripper, currDeviceMode)	' Set DeviceMode to Previous Mode
+	Call ZSet_CtrlWord(ZGripper, 0)					' Stop Transfer Data
+
+	ZMotor = ZGet_Error_Status(ZGripper)			' Return Error Status
+End Function
+
+'----------------------------------------------------------------------------------------
+' ZHome
+'----------------------------------------------------------------------------------------
+Function ZHome(ZGripper As Variant) As Integer
+	Call ZSet_CtrlWord(ZGripper, 1)		' Start Transfer Data
+	Call ZSet_DeviceMode(ZGripper, 10)	' Set DeviceMode to Homing
+	Call ZSet_CtrlWord(ZGripper, 0)		' Stop Transfer Data
+	
+	ZHome = ZGet_Error_Status(ZGripper)	' Return Error Status
+End Function
+
+'----------------------------------------------------------------------------------------
+' ZJog
+'----------------------------------------------------------------------------------------
+Function ZJog(ZGripper As Variant, jogDirection As Integer) As Integer
+	Call ZSet_CtrlWord(ZGripper, 1)		' Transfer Data to Motor Control System
+	Call ZSet_DeviceMode(ZGripper, 11)	' Set DeviceMode to Activate Jog Mode
+	
+	' Jog Gripper Negative Direction (To Base Position)
+	If jogDirection = 0 Then 
+		Call ZSet_CtrlWord(ZGripper, 1024)	' Set -jog mode
+		
+		' Get -Jog Active Status
+		ZJog = ZGet_NJogModeActive_Status(ZGripper)
+
+	' Jog Gripper Positive Direction (To Work Position)
+	ElseIf jogDirection = 1 Then 
+		Call ZSet_CtrlWord(ZGripper, 2048)	' Set +jog mode
+
+		' Get +Jog Active Status
+		ZJog = ZGet_Error_Status(ZGripper)	' Return Error Status
 	End If
 End Function
 
-' --------------CAO FUNCTIONS----------------------------------------------------------------------
-'
-' CaoWorkspace::AddController()
-'
-Function Cao_AddController(IOMasterIPAddr As String) As Object
-	Dim caoCtrlName As String
-	Dim caoProv As String
+'----------------------------------------------------------------------------------------
+' ZOpen 
+'----------------------------------------------------------------------------------------
+Function ZOpen(ZGripper As Variant) As Integer
+	Call ZSet_CtrlWord(ZGripper, 256)		' Transfer Data to Motor Control System
+
+	Wait ZGet_InMotion_Status(ZGripper) = 1
+	Wait ZGet_CompleteMovement_Status(ZGripper) = 1
+
+	ZOpen = ZGet_Error_Status(ZGripper)		' Return Error Status
+End Function
+
+'----------------------------------------------------------------------------------------
+' ZClose
+'----------------------------------------------------------------------------------------
+Function ZClose(ZGripper As Variant) As Integer
+	Call ZSet_CtrlWord(ZGripper, 512)		' Transfer Data to Motor Control System
 	
-	' CaoController Parameters
-	caoCtrlName = IOMasterIPAddr
-	caoProv = "CaoProv.Modbus.X"
-	IOMasterIPAddr = Sprintf("Conn=eth:%s, @IfNotMember", IOMasterIPAddr)
+	Wait ZGet_InMotion_Status(ZGripper) = 1
+	Wait ZGet_CompleteMovement_Status(ZGripper) = 1
 
-	Cao_AddController = Cao.AddController(caoCtrlName, caoProv, "", IOMasterIPAddr)
+	ZClose = ZGet_Error_Status(ZGripper)	' Return Error Status
 End Function
 
-'
-' CaoController::AddExtension()
-'
-Function Cao_AddExtension(CaoCtrl As Object, ZimExt As String) As Object
-	' CaoExtension Parameters
-	Dim ExtOpt As String					' CaoExtension Option
-	ExtOpt = Sprintf("UnitAddress=%d, @IfNotMember", Right(ZimExt,1))
+'----------------------------------------------------------------------------------------
+' ZSet_MotionProfile
+'----------------------------------------------------------------------------------------
+Function ZSetMotionParam(ZGripper As Variant,_
+						   motionProfile As Variant,_
+						   posTolerance As Variant,_
+						   gripForce As Variant,_
+						   driveV As Variant,_
+				       	   posBase As Variant,_
+				       	   posShift As Variant,_
+						   posTeach As Variant,_
+						   posWork As Variant)_
+				       	   As Integer
 
-	Cao_AddExtension = CaoCtrl.AddExtension(ZimExt, ExtOpt)							
+	' Start Transfer Data
+	Call ZSet_CtrlWord(ZGripper, 1)					
+	Call ZSet_WorkpieceNo(ZGripper, 0)	
+	Call ZSet_DeviceMode(ZGripper, motionProfile)	 	
+	Call ZSet_PoseTolerance(ZGripper, posTolerance)
+	Call ZSet_GripForce(ZGripper, gripForce)
+	Call ZSet_DriveVelocity(ZGripper, driveV)
+	Call ZSet_BasePose(ZGripper, posBase)
+	Call ZSet_ShiftPose(ZGripper, posShift)
+	Call ZSet_TeachPose(ZGripper, posTeach)
+	Call ZSet_WorkPose(ZGripper, posWork)
+
+	' Stop Transfer Data
+	Call ZSet_CtrlWord(ZGripper, 0)	
+	
+	' Return Error Status	
+	ZSetMotionParam = ZGet_Error_Status(ZGripper)					
 End Function
 
-'
-' CaoExtension::AddVariable
-'
-Function Cao_AddVariable(CaoExt As Object, CaoVarName As String) As Object
-	 Cao_AddVariable = CaoExt.AddVariable(CaoVarName, "@IfNotMember")
+'----------------------------------------------------------------------------------------
+' ZTeachPos
+'----------------------------------------------------------------------------------------
+Function ZTeachPos(ZGripper As Variant) As Integer
+	' Teach
+	Call ZSet_CtrlWord(ZGripper, 8)	
+
+	' Return Error Status	
+	ZTeachPos = ZGet_Error_Status(ZGripper)	
 End Function
 
-'
-' CaoVariable.Value (Get)
-'
-Function Cao_GetVariable(CaoVar As Object) As Integer
-	Cao_GetVariable = CaoVar.Value
+'----------------------------------------------------------------------------------------
+' ZSave_WorkRecipe
+'----------------------------------------------------------------------------------------
+Function ZSaveWorkRecipe(ZGripper As Variant, workRecipe As Variant) As Integer
+	' Start Transfer Data
+	Call ZSet_CtrlWord(ZGripper, 1)
+	Call ZSet_WorkpieceNo(ZGripper, workRecipe)	
+
+	' Write PDU data to the Workpiece Recipe
+	Call ZSet_CtrlWord(ZGripper, 2)
+	Wait ZGet_DataTransferOK_Status(ZGripper) = 0 
+
+	' Start Transfer Data
+	Call ZSet_CtrlWord(ZGripper, 1)
+	Wait ZGet_DataTransferOK_Status(ZGripper) = 1 
+
+	' Stop Transfer Data
+	Call ZSet_CtrlWord(ZGripper, 0)
+
+	' Return Error Status	
+	ZSaveWorkRecipe = ZGet_Error_Status(ZGripper)
 End Function
 
-'
-' CaoVariable.Value (Set)
-'
-Function Cao_SetVariable(CaoVar As Object, newValue As Variant) As Integer
-	CaoVar.Value = newValue
+'----------------------------------------------------------------------------------------
+' ZLoad_WorkRecipe
+'----------------------------------------------------------------------------------------
+Function ZLoadWorkRecipe(ZGripper As Variant, workRecipe As Variant) As Integer
+	' Start Transfer Data
+	Call ZSet_CtrlWord(ZGripper, 1)
+	Call ZSet_WorkpieceNo(ZGripper, workRecipe)	
+
+	' Stop Transfer Data
+	Call ZSet_CtrlWord(ZGripper, 0)
+
+	' Return Error Status	
+	ZLoadWorkRecipe = ZGet_Error_Status(ZGripper)	
 End Function
-
-
-
-
-
-
