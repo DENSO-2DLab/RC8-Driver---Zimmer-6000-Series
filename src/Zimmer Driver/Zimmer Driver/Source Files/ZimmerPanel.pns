@@ -1,0 +1,54 @@
+#include <PanelMain.h> raw
+#ifdef TP_DESIGNER
+'<<--TPDESIGNER_RESERVED-->>
+CAPTION=""
+BG=&H754E3A
+FG=&H000000
+TIMEOUT=2000
+TIMEOUTMODE=1
+RELEASEMODE=0
+PNLCCVER=232
+COLORTYPE=1
+FONTTYPE=1
+BORDERSTYLE=0
+CONTROLSORT=0
+add_widget 1,"PB1",10,20,120,30,&H000000,&HB0B0B0,0,3,1,"Connect",14,0,0,"Tahoma","",1,1;
+add_widget 2,"Label1",80,70,160,20,&H000000,&HB0B0B0,0,1,0,"Control Word",12,2,"Tahoma","",1,1;
+add_widget 5,"NB1",260,70,60,20,&H000000,&HB0B0B0,0,3,0,"NB1",12,0,0,"Tahoma";
+add_widget 5,"NB2",10,70,60,20,&H000000,&HB0B0B0,0,3,2,"NB1",12,0,&h0,"Tahoma";
+add_widget 2,"Label2",330,70,160,20,&H000000,&HB0B0B0,0,1,0,"Device Mode",12,2,"Tahoma","",1,1;
+add_widget 5,"NB3",10,100,60,20,&H000000,&HB0B0B0,0,3,0,"NB1",12,0,0,"Tahoma";
+add_widget 2,"Label3",80,100,160,20,&H000000,&HB0B0B0,0,1,0,"Workpiece No.",12,2,"Tahoma","",1,1;
+add_widget 5,"NB4",260,100,60,20,&H000000,&HB0B0B0,0,3,0,"NB1",12,0,0,"Tahoma";
+add_widget 2,"Label4",330,100,160,20,&H000000,&HB0B0B0,0,1,0,"Position Tolerance",12,2,"Tahoma","",1,1;
+add_widget 5,"NB5",10,130,60,20,&H000000,&HB0B0B0,0,3,0,"NB1",12,0,0,"Tahoma";
+add_widget 2,"Label5",80,130,160,20,&H000000,&HB0B0B0,0,1,0,"Grip Force",12,2,"Tahoma","",1,1;
+add_widget 5,"NB6",260,130,60,20,&H000000,&HB0B0B0,0,3,0,"NB1",12,0,0,"Tahoma";
+add_widget 2,"Label6",330,130,160,20,&H000000,&HB0B0B0,0,1,0,"Drive Velocity",12,2,"Tahoma","",1,1;
+add_widget 5,"NB7",10,160,60,20,&H000000,&HB0B0B0,0,3,4,"NB1",12,0,      0,"Tahoma";
+add_widget 2,"Label7",80,160,160,20,&H000000,&HB0B0B0,0,1,0,"Base Position",12,2,"Tahoma","",1,1;
+add_widget 5,"NB8",260,160,60,20,&H000000,&HB0B0B0,0,3,4,"NB1",12,0,      0,"Tahoma";
+add_widget 2,"Label8",330,160,160,20,&H000000,&HB0B0B0,0,1,0,"Shift Position",12,2,"Tahoma","",1,1;
+add_widget 2,"Label9",80,190,160,20,&H000000,&HB0B0B0,0,1,0,"Teach Position",12,2,"Tahoma","",1,1;
+add_widget 5,"NB9",10,190,60,20,&H000000,&HB0B0B0,0,3,4,"NB1",12,0,      0,"Tahoma";
+add_widget 2,"Label10",330,190,160,20,&H000000,&HB0B0B0,0,1,0,"Work Position",12,2,"Tahoma","",1,1;
+add_widget 5,"NB10",260,190,60,20,&H000000,&HB0B0B0,0,3,4,"NB1",12,0,      0,"Tahoma";
+add_widget 4,"Line1",10,220,490,0,&H000000,&HB0B0B0,0,1,0,1;
+add_widget 5,"NB11",10,240,60,20,&H000000,&HB0B0B0,0,3,0,"NB1",12,0,0,"Tahoma";
+add_widget 2,"Label11",80,240,160,20,&H000000,&HB0B0B0,0,1,0,"Status",12,2,"Tahoma","",1,1;
+add_widget 2,"Label12",260,240,230,20,&H000000,&HB0B0B0,0,1,0,"<status binary>",12,2,"Tahoma","",1,1;
+add_widget 5,"NB12",10,270,60,20,&H000000,&HB0B0B0,0,3,0,"NB1",12,0,0,"Tahoma";
+add_widget 2,"Label13",80,270,160,20,&H000000,&HB0B0B0,0,1,0,"Diagnostics",12,2,"Tahoma","",1,1;
+add_widget 5,"NB13",260,270,60,20,&H000000,&HB0B0B0,0,3,0,"NB1",12,0,0,"Tahoma";
+add_widget 2,"Label14",330,270,160,20,&H000000,&HB0B0B0,0,1,0,"Actual Position",12,2,"Tahoma","",1,1;
+add_widget 4,"Line2",500,70,0,220,&H000000,&HB0B0B0,0,1,0,1;
+add_widget 1,"PB2",140,20,120,30,&H000000,&HB0B0B0,0,3,1,"Read Data",14,0,0,"Tahoma","",1,1;
+add_widget 1,"PB3",510,70,120,30,&H000000,&HB0B0B0,0,3,1,"Move to Work",12,0,0,"Tahoma","",1,1;
+add_widget 1,"PB4",510,110,120,30,&H000000,&HB0B0B0,0,3,1,"Move to Base",12,0,0,"Tahoma","",1,1;
+add_widget 1,"PB5",270,20,120,30,&H000000,&HB0B0B0,0,3,1,"Send Data",14,0,0,"Tahoma","",1,1;
+add_widget 1,"PB6",510,150,120,30,&H000000,&HB0B0B0,0,3,1,"Jog (+)",12,0,0,"Tahoma","",1,1;
+add_widget 1,"PB7",510,190,120,30,&H000000,&HB0B0B0,0,3,1,"Jog (-)",12,0,0,"Tahoma","",1,1;
+add_widget 2,"Label15",0,340,640,20,&H000000,&HB0B0B0,0,1,0,"Label15",12,0,"Tahoma","",1,1;
+add_widget 2,"Label16",0,310,640,20,&H000000,&HB0B0B0,0,1,0,"Label16",12,0,"Tahoma","",1,1;
+'<<--TPDESIGNER_RESERVED-->>
+#endif
