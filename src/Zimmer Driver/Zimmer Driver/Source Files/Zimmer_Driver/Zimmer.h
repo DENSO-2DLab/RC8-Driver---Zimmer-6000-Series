@@ -3,8 +3,8 @@
 ' * RC8 Driver For Zimmer Gripper 6000s Series											*
 ' *																						*
 ' * Author: Carlos A. Lopez																*
-' * Date: 08/21/2017																	*
-' * Version: 0.5 Debug 																	*
+' * Date: 10/5/2017																		*
+' * Version: 0.7 Debug 																	*
 ' *																						*
 ' * If you have any issues with this driver 											*
 ' * please contact us at: 																*
@@ -19,6 +19,12 @@
 ' * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.								*
 ' *																						*
 ' ***************************************************************************************
+
+'----------------------------------------------------------------------------------------
+' Timeout(s) & Flags
+'----------------------------------------------------------------------------------------
+#Define GLOBAL_TIMEOUT	30000
+#Define DEBUG_MODE		1
 
 '----------------------------------------------------------------------------------------
 ' Driver Files

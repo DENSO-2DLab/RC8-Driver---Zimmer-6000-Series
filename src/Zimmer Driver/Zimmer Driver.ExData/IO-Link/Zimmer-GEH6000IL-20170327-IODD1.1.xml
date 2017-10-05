@@ -1,0 +1,1163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<IODevice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.io-link.com/IODD/2010/10" xsi:schemaLocation="http://www.io-link.com/IODD/2010/10 IODD1.1.xsd">
+	<DocumentInfo version="V1.2" releaseDate="2017-03-27" copyright="Copyright 2015, Zimmer GmbH"/>
+	<ProfileHeader>
+		<ProfileIdentification>IO Device Profile</ProfileIdentification>
+		<ProfileRevision>1.1</ProfileRevision>
+		<ProfileName>Device Profile for IO Devices</ProfileName>
+		<ProfileSource>IO-Link Consortium</ProfileSource>
+		<ProfileClassID>Device</ProfileClassID>
+		<ISO15745Reference>
+			<ISO15745Part>1</ISO15745Part>
+			<ISO15745Edition>1</ISO15745Edition>
+			<ProfileTechnology>IODD</ProfileTechnology>
+		</ISO15745Reference>
+	</ProfileHeader>
+	<ProfileBody>
+<!-- 0x0344  / 836		-		0x010002 / 65538-->
+		<DeviceIdentity vendorId="836" vendorName="Zimmer GmbH" deviceId="65538">
+			<VendorText textId="T_VendorText"/>
+			<VendorUrl textId="T_VendorUrl"/>
+			<VendorLogo name="Zimmer-logo.png"/>
+			<DeviceName textId="T_DeviceName"/>
+			<DeviceFamily textId="T_DeviceFamily"/>
+			<DeviceVariantCollection>
+				<DeviceVariant productId="GEH6060IL"  deviceSymbol="Zimmer-GEH6060IL-pic.png" deviceIcon="Zimmer-GEH6060IL-icon.png">
+					<Name textId="TN_ProductName1"/>
+					<Description textId="TD_ProductText1"/>
+				</DeviceVariant>
+				<DeviceVariant productId="GEH6140IL"  deviceSymbol="Zimmer-GEH6140IL-pic.png" deviceIcon="Zimmer-GEH6140IL-icon.png">
+					<Name textId="TN_ProductName2"/>
+					<Description textId="TD_ProductText2"/>
+				</DeviceVariant>
+				<DeviceVariant productId="GEH6180IL"  deviceSymbol="Zimmer-GEH6180IL-pic.png" deviceIcon="Zimmer-GEH6180IL-icon.png">
+					<Name textId="TN_ProductName3"/>
+					<Description textId="TD_ProductText3"/>
+				</DeviceVariant>
+			</DeviceVariantCollection>
+		</DeviceIdentity>
+		<DeviceFunction>
+			<Features blockParameter="true" dataStorage="true">
+				<SupportedAccessLocks localUserInterface="false" dataStorage="true" parameter="true" localParameterization="false"/>
+			</Features>
+			
+<!-- Zimmer-Datentyp -->			
+			<DatatypeCollection>
+				<Datatype id="V_RecordWPNo" xsi:type="RecordT" bitLength="120" subindexAccessSupported = "false">
+					<!-- BasePosition -->
+					<RecordItem subindex="1" bitOffset="104">
+						<SimpleDatatype xsi:type="UIntegerT" bitLength="16"/>
+						<Name textId="TN_V_Record1"/>
+					</RecordItem>
+					<!-- ShiftPosition -->
+					<RecordItem subindex="2" bitOffset="88">
+					<SimpleDatatype xsi:type="UIntegerT" bitLength="16"/>
+						<Name textId="TN_V_Record2"/>
+					</RecordItem>
+					<!-- TeachPosition -->
+					<RecordItem subindex="3" bitOffset="72">
+					<SimpleDatatype xsi:type="UIntegerT" bitLength="16"/>
+						<Name textId="TN_V_Record3"/>
+					</RecordItem>
+					<!-- WorkPosition -->
+					<RecordItem subindex="4" bitOffset="56">
+					<SimpleDatatype xsi:type="UIntegerT" bitLength="16"/>
+						<Name textId="TN_V_Record4"/>
+					</RecordItem>	
+					<!-- Device-Mode -->
+					<RecordItem subindex="5" bitOffset="48">
+					<SimpleDatatype xsi:type="UIntegerT" bitLength="8"/>
+						<Name textId="TN_V_Record5"/>
+					</RecordItem>	
+					<!-- Grip-Force -->
+					<RecordItem subindex="6" bitOffset="40">
+					<SimpleDatatype xsi:type="UIntegerT" bitLength="8"/>
+						<Name textId="TN_V_Record6"/>
+					</RecordItem>		
+					<!-- Drive-Velocity -->
+					<RecordItem subindex="7" bitOffset="32">
+					<SimpleDatatype xsi:type="UIntegerT" bitLength="8"/>
+						<Name textId="TN_V_Record7"/>
+					</RecordItem>	
+					<!-- Position-Tolerance -->
+					<RecordItem subindex="8" bitOffset="24">
+					<SimpleDatatype xsi:type="UIntegerT" bitLength="8"/>
+						<Name textId="TN_V_Record8"/>
+					</RecordItem>	
+					<!-- acceleration -->
+					<RecordItem subindex="9" bitOffset="16">
+					<SimpleDatatype xsi:type="UIntegerT" bitLength="8"/>
+						<Name textId="TN_V_Record9"/>
+					</RecordItem>
+					<!-- deceleration -->	
+					<RecordItem subindex="10" bitOffset="8">
+					<SimpleDatatype xsi:type="UIntegerT" bitLength="8"/>
+						<Name textId="TN_V_Record10"/>
+					</RecordItem>	
+					<!-- jerk -->
+					<RecordItem subindex="11" bitOffset="0">
+					<SimpleDatatype xsi:type="UIntegerT" bitLength="8"/>
+						<Name textId="TN_V_Record11"/>
+					</RecordItem>				
+				  </Datatype>          
+			</DatatypeCollection>			
+			<VariableCollection>
+				<StdVariableRef id="V_DirectParameters_1"/><!--0-->
+				<StdVariableRef id="V_DirectParameters_2"/><!--1-->
+				<StdVariableRef id="V_SystemCommand"><!--2-->
+					<StdSingleValueRef value="130"/><!-- Reset Factory Settings-->
+				</StdVariableRef>
+				<StdVariableRef id="V_DeviceAccessLocks">
+					<StdRecordItemRef subindex="1" defaultValue="false"/>
+					<StdRecordItemRef subindex="2" defaultValue="false"/>
+				</StdVariableRef><!--12-->
+				<StdVariableRef id="V_VendorName" defaultValue="Zimmer GmbH"/><!--16-->
+				<StdVariableRef id="V_VendorText" defaultValue="www.zimmer-group.com"/><!--17-->
+				<StdVariableRef id="V_ProductName" fixedLengthRestriction="32"/><!--18-->
+				<StdVariableRef id="V_ProductID" fixedLengthRestriction="32"/><!--19-->
+				<StdVariableRef id="V_ProductText" fixedLengthRestriction="32"/><!--20-->
+				<StdVariableRef id="V_SerialNumber" fixedLengthRestriction="16"/><!--21-->
+				<StdVariableRef id="V_HardwareRevision" fixedLengthRestriction="32"/><!--22-->
+				<StdVariableRef id="V_FirmwareRevision" fixedLengthRestriction="32"/><!--23-->
+				<StdVariableRef id="V_ApplicationSpecificTag" fixedLengthRestriction="32"/><!--24-->
+				<StdVariableRef id="V_ErrorCount"/><!--32-->
+				<!-- 33-35 reserved -->
+				<StdVariableRef id="V_DeviceStatus"/><!--36-->
+				<StdVariableRef id="V_DetailedDeviceStatus" fixedLengthRestriction="4"/><!--37-->
+				<StdVariableRef id="V_ProcessDataInput"/><!--40-->
+				<StdVariableRef id="V_ProcessDataOutput"/><!--41-->	
+
+<!-- Start mandatory variables -->
+				<Variable accessRights="ro" id="V_ro_Statusword" index="64">
+					<Datatype xsi:type="UIntegerT" bitLength="16"></Datatype>
+					<Name textId="TN_V_ro_Statusword"></Name>
+				</Variable>
+				<Variable accessRights="ro" id="V_ro_Diagnose" index="65">
+					<Datatype xsi:type="UIntegerT" bitLength="16"></Datatype>
+					<Name textId="TN_V_ro_Diagnose"></Name>
+				</Variable>
+				<Variable accessRights="ro" id="V_ro_Cyclecounter" index="66">
+					<Datatype xsi:type="UIntegerT" bitLength="32"></Datatype>
+					<Name textId="TN_V_ro_Cyclecounter"></Name>
+				</Variable>
+				<Variable accessRights="ro" id="V_ro_Temperature" index="67">
+					<Datatype xsi:type="UIntegerT" bitLength="16"></Datatype>
+					<Name textId="TN_V_ro_Temperature"></Name>
+				</Variable>
+				<Variable accessRights="ro" id="V_ro_Controlword" index="68">
+					<Datatype xsi:type="UIntegerT" bitLength="16"></Datatype>
+					<Name textId="TN_V_ro_Controlword"></Name>
+				</Variable>		
+				<Variable accessRights="ro" id="V_ro_Errorcode" index="69">
+					<Datatype xsi:type="StringT" fixedLength="64" encoding="UTF-8"></Datatype>
+					<Name textId="TN_V_ro_Errorcode"></Name>
+				</Variable>
+				<Variable accessRights="ro" id="V_ro_Errorcounter" index="70">
+					<Datatype xsi:type="UIntegerT" bitLength="32"></Datatype>
+					<Name textId="TN_V_ro_Errorcounter"></Name>
+				</Variable>
+<!-- End mandatory variables -->	
+
+<!-- Start Device specific variables -->
+				<Variable accessRights="ro" id="V_ro_Actualposition" index="256">
+					<Datatype xsi:type="UIntegerT" bitLength="16"></Datatype>
+					<Name textId="TN_V_ro_Actualposition"></Name>
+				</Variable>
+				<Variable accessRights="ro" id="V_ro_Teachposition" index="257">
+					<Datatype xsi:type="UIntegerT" bitLength="16"></Datatype>
+					<Name textId="TN_V_ro_Teachposition"></Name>
+				</Variable>
+				<Variable accessRights="ro" id="V_ro_Workpieceno" index="258">
+					<Datatype xsi:type="UIntegerT" bitLength="8"></Datatype>
+					<Name textId="TN_V_ro_Workpieceno"></Name>
+				</Variable>
+				<Variable accessRights="ro" id="V_ro_Devicemode" index="259">
+					<Datatype xsi:type="UIntegerT" bitLength="8"></Datatype>
+					<Name textId="TN_V_ro_Devicemode"></Name>
+				</Variable>
+				<Variable accessRights="ro" id="V_ro_Positiontolerance" index="260">
+					<Datatype xsi:type="UIntegerT" bitLength="8"></Datatype>
+					<Name textId="TN_V_ro_Positiontolerance"></Name>
+				</Variable>
+				<Variable accessRights="ro" id="V_ro_Gripforce" index="261">
+					<Datatype xsi:type="UIntegerT" bitLength="8"></Datatype>
+					<Name textId="TN_V_ro_Gripforce"></Name>
+				</Variable>							
+				<Variable accessRights="ro" id="V_ro_Drivevelocity" index="263">
+					<Datatype xsi:type="UIntegerT" bitLength="8"></Datatype>
+					<Name textId="TN_V_ro_Drivevelocity"></Name>
+				</Variable>		
+				<Variable accessRights="ro" id="V_ro_Baseposition" index="264">
+					<Datatype xsi:type="UIntegerT" bitLength="16"></Datatype>
+					<Name textId="TN_V_ro_Baseposition"></Name>
+				</Variable>						
+				<Variable accessRights="ro" id="V_ro_Shiftposition" index="265">
+					<Datatype xsi:type="UIntegerT" bitLength="16"></Datatype>
+					<Name textId="TN_V_ro_Shiftposition"></Name>
+				</Variable>		
+				<Variable accessRights="ro" id="V_ro_Workposition" index="266">
+					<Datatype xsi:type="UIntegerT" bitLength="16"></Datatype>
+					<Name textId="TN_V_ro_Workposition"></Name>
+				</Variable>					
+				<Variable accessRights="ro" id="V_ro_acceleration" index="267">
+					<Datatype xsi:type="UIntegerT" bitLength="8"></Datatype>
+					<Name textId="TN_V_ro_acceleration"></Name>
+				</Variable>
+				<Variable accessRights="ro" id="V_ro_deceleration" index="268">
+					<Datatype xsi:type="UIntegerT" bitLength="8"></Datatype>
+					<Name textId="TN_V_ro_deceleration"></Name>
+				</Variable>
+				<Variable accessRights="ro" id="V_ro_jerk" index="269">
+					<Datatype xsi:type="UIntegerT" bitLength="8"></Datatype>
+					<Name textId="TN_V_ro_jerk"></Name>
+				</Variable>
+			
+<!-- End Device specific variables -->	
+		
+								
+<!-- Records -->
+				<Variable accessRights="ro" id="V_WPNo1" index="2048">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo1"/>
+				</Variable>	
+				<Variable accessRights="ro" id="V_WPNo2" index="2049">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo2"/>
+				</Variable>			
+				<Variable accessRights="ro" id="V_WPNo3" index="2050">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo3"/>
+				</Variable>		
+				<Variable accessRights="ro" id="V_WPNo4" index="2051">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo4"/>
+				</Variable>		
+				<Variable accessRights="ro" id="V_WPNo5" index="2052">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo5"/>
+				</Variable>
+				<Variable accessRights="ro" id="V_WPNo6" index="2053">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo6"/>
+				</Variable>	
+				<Variable accessRights="ro" id="V_WPNo7" index="2054">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo7"/>
+				</Variable>			
+				<Variable accessRights="ro" id="V_WPNo8" index="2055">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo8"/>
+				</Variable>		
+				<Variable accessRights="ro" id="V_WPNo9" index="2056">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo9"/>
+				</Variable>		
+				<Variable accessRights="ro" id="V_WPNo10" index="2057">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo10"/>
+				</Variable>					
+
+				<Variable accessRights="ro" id="V_WPNo11" index="2058">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo11"/>
+				</Variable>	
+				<Variable accessRights="ro" id="V_WPNo12" index="2059">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo12"/>
+				</Variable>			
+				<Variable accessRights="ro" id="V_WPNo13" index="2060">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo13"/>
+				</Variable>		
+				<Variable accessRights="ro" id="V_WPNo14" index="2061">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo14"/>
+				</Variable>		
+				<Variable accessRights="ro" id="V_WPNo15" index="2062">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo15"/>
+				</Variable>
+				<Variable accessRights="ro" id="V_WPNo16" index="2063">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo16"/>
+				</Variable>	
+				<Variable accessRights="ro" id="V_WPNo17" index="2064">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo17"/>
+				</Variable>			
+				<Variable accessRights="ro" id="V_WPNo18" index="2065">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo18"/>
+				</Variable>		
+				<Variable accessRights="ro" id="V_WPNo19" index="2066">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo19"/>
+				</Variable>		
+				<Variable accessRights="ro" id="V_WPNo20" index="2067">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo20"/>
+				</Variable>	
+
+				<Variable accessRights="ro" id="V_WPNo21" index="2068">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo21"/>
+				</Variable>	
+				<Variable accessRights="ro" id="V_WPNo22" index="2069">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo22"/>
+				</Variable>			
+				<Variable accessRights="ro" id="V_WPNo23" index="2070">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo23"/>
+				</Variable>		
+				<Variable accessRights="ro" id="V_WPNo24" index="2071">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo24"/>
+				</Variable>		
+				<Variable accessRights="ro" id="V_WPNo25" index="2072">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo25"/>
+				</Variable>
+				<Variable accessRights="ro" id="V_WPNo26" index="2073">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo26"/>
+				</Variable>	
+				<Variable accessRights="ro" id="V_WPNo27" index="2074">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo27"/>
+				</Variable>			
+				<Variable accessRights="ro" id="V_WPNo28" index="2075">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo28"/>
+				</Variable>		
+				<Variable accessRights="ro" id="V_WPNo29" index="2076">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo29"/>
+				</Variable>		
+				<Variable accessRights="ro" id="V_WPNo30" index="2077">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo30"/>
+				</Variable>	
+
+				<Variable accessRights="ro" id="V_WPNo31" index="2078">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo31"/>
+				</Variable>		
+				<Variable accessRights="ro" id="V_WPNo32" index="2079">
+					<DatatypeRef datatypeId="V_RecordWPNo" />
+					<Name textId="TN_V_WPNo32"/>
+				</Variable>	
+				
+			</VariableCollection>
+			<ProcessDataCollection>
+				<ProcessData id="PD">
+					<ProcessDataIn id="PDI" bitLength="48">
+						<Datatype xsi:type="RecordT" bitLength="48" subindexAccessSupported="false">	
+							<RecordItem subindex="1" bitOffset="32">
+								<SimpleDatatype xsi:type="UIntegerT" bitLength="16"/>
+								<Name textId="TN_PDI_Statusword"/>
+							</RecordItem>		
+							<RecordItem subindex="2" bitOffset="16">
+								<SimpleDatatype xsi:type="UIntegerT" bitLength="16"/>
+								<Name textId="TN_PDI_Diagnose"/>
+							</RecordItem>				
+							<RecordItem subindex="3" bitOffset="0">
+								<SimpleDatatype xsi:type="UIntegerT" bitLength="16"/>
+								<Name textId="TN_PDI_ActualPosition"/>
+							</RecordItem>									
+						</Datatype>
+						<Name textId="TN_PDI"></Name>
+					</ProcessDataIn>
+					<ProcessDataOut id="PDO" bitLength="128">
+						<Datatype xsi:type="RecordT" bitLength="128" subindexAccessSupported="false">			
+							<RecordItem subindex="1" bitOffset="112">
+								<SimpleDatatype xsi:type="UIntegerT" bitLength="16"/>
+								<Name textId="TN_PDO_Controlword"/>
+							</RecordItem>	
+							<RecordItem subindex="2" bitOffset="104">
+								<SimpleDatatype xsi:type="UIntegerT" bitLength="8"/>
+								<Name textId="TN_PDO_GripMode"/>
+							</RecordItem>	
+							<RecordItem subindex="3" bitOffset="96">
+								<SimpleDatatype xsi:type="UIntegerT" bitLength="8"/>
+								<Name textId="TN_PDO_WorkPieceNo"/>
+							</RecordItem>	
+							<RecordItem subindex="4" bitOffset="88">
+								<SimpleDatatype xsi:type="UIntegerT" bitLength="8"/>
+								<Name textId="TN_PDO_Reserve"/>
+							</RecordItem>	
+							<RecordItem subindex="5" bitOffset="80">
+								<SimpleDatatype xsi:type="UIntegerT" bitLength="8"/>
+								<Name textId="TN_PDO_PositionTolerance"/>
+							</RecordItem>
+							<RecordItem subindex="6" bitOffset="72">
+								<SimpleDatatype xsi:type="UIntegerT" bitLength="8"/>
+								<Name textId="TN_PDO_GripForce"/>
+							</RecordItem>	
+							<RecordItem subindex="7" bitOffset="64">
+								<SimpleDatatype xsi:type="UIntegerT" bitLength="8"/>
+								<Name textId="TN_PDO_DriveVelocity"/>
+							</RecordItem>
+							<RecordItem subindex="8" bitOffset="48">
+								<SimpleDatatype xsi:type="UIntegerT" bitLength="16"/>
+								<Name textId="TN_PDO_BasePosition"/>
+							</RecordItem>
+							<RecordItem subindex="9" bitOffset="32">
+								<SimpleDatatype xsi:type="UIntegerT" bitLength="16"/>
+								<Name textId="TN_PDO_ShiftPosition"/>
+							</RecordItem>
+							<RecordItem subindex="10" bitOffset="16">
+								<SimpleDatatype xsi:type="UIntegerT" bitLength="16"/>
+								<Name textId="TN_PDO_TeachPosition"/>
+							</RecordItem>							
+							<RecordItem subindex="11" bitOffset="0">
+								<SimpleDatatype xsi:type="UIntegerT" bitLength="16"/>
+								<Name textId="TN_PDO_WorkPosition"/>
+							</RecordItem>
+						</Datatype>  
+						<Name textId="TN_PDO"/>
+					</ProcessDataOut>
+				</ProcessData>
+			</ProcessDataCollection>
+			
+			<EventCollection>
+				<StdEventRef code="20753"/><!-- 0x5111 Primary supply voltage under-run -->
+				<StdEventRef code="4096"/><!-- "0x1000 General malfunction -->
+			</EventCollection>
+			
+			<UserInterface>
+				<MenuCollection>
+					<Menu id="ME_Ident">
+						<VariableRef variableId="V_VendorName"/>
+						<VariableRef variableId="V_VendorText"/>
+						<VariableRef variableId="V_ProductName"/>
+						<VariableRef variableId="V_ProductID"/>
+						<VariableRef variableId="V_ProductText"/>
+						<VariableRef variableId="V_SerialNumber"/>
+						<VariableRef variableId="V_HardwareRevision"/>
+						<VariableRef variableId="V_FirmwareRevision"/>
+						<VariableRef variableId="V_ApplicationSpecificTag" accessRightRestriction="ro"/>
+					</Menu>
+					<Menu id="ME_Observe">
+						<RecordItemRef variableId="V_ProcessDataInput" subindex="1"/>
+						<RecordItemRef variableId="V_ProcessDataInput" subindex="2"/>
+						<RecordItemRef variableId="V_ProcessDataInput" subindex="3"/>
+						<RecordItemRef variableId="V_ProcessDataOutput" subindex="1"/>
+						<RecordItemRef variableId="V_ProcessDataOutput" subindex="2"/>
+						<RecordItemRef variableId="V_ProcessDataOutput" subindex="3"/>
+						<RecordItemRef variableId="V_ProcessDataOutput" subindex="4"/>
+						<RecordItemRef variableId="V_ProcessDataOutput" subindex="5"/>
+						<RecordItemRef variableId="V_ProcessDataOutput" subindex="6"/>						
+						<RecordItemRef variableId="V_ProcessDataOutput" subindex="7"/>
+						<RecordItemRef variableId="V_ProcessDataOutput" subindex="8"/>
+						<RecordItemRef variableId="V_ProcessDataOutput" subindex="9"/>
+						<RecordItemRef variableId="V_ProcessDataOutput" subindex="10"/>
+						<RecordItemRef variableId="V_ProcessDataOutput" subindex="11"/>
+					</Menu>
+					<Menu id="ME_Param">
+						<VariableRef variableId="V_ApplicationSpecificTag"/>
+
+<!-- End mandatory variables -->	
+						<VariableRef variableId="V_ro_Statusword"/>
+						<VariableRef variableId="V_ro_Diagnose"/> 
+						<VariableRef variableId="V_ro_Cyclecounter"/>
+						<VariableRef variableId="V_ro_Temperature"/> 
+						<VariableRef variableId="V_ro_Controlword"/> 
+						<VariableRef variableId="V_ro_Errorcode"/>
+						<VariableRef variableId="V_ro_Errorcounter"/>
+<!-- End mandatory variables -->				
+	
+<!-- Start Device specific variables -->
+						<VariableRef variableId="V_ro_Actualposition"/>
+						<VariableRef variableId="V_ro_Teachposition"/> 
+						<VariableRef variableId="V_ro_Workpieceno"/>
+						<VariableRef variableId="V_ro_Devicemode"/> 
+						<VariableRef variableId="V_ro_Positiontolerance"/> 
+						<VariableRef variableId="V_ro_Gripforce"/>
+						
+						<VariableRef variableId="V_ro_Drivevelocity"/>	
+						<VariableRef variableId="V_ro_Baseposition"/>	
+						<VariableRef variableId="V_ro_Shiftposition"/>	
+						<VariableRef variableId="V_ro_Workposition"/>	
+						<VariableRef variableId="V_ro_acceleration"/>	
+						<VariableRef variableId="V_ro_deceleration"/>	
+						<VariableRef variableId="V_ro_jerk"/>	
+<!-- Start Device specific variables -->
+										
+<!-- Records -->				
+						<MenuRef menuId="ME_WorkpieceNo1"/>	
+						<MenuRef menuId="ME_WorkpieceNo2"/>	
+						<MenuRef menuId="ME_WorkpieceNo3"/>	
+						<MenuRef menuId="ME_WorkpieceNo4"/>	
+						<MenuRef menuId="ME_WorkpieceNo5"/>	
+						<MenuRef menuId="ME_WorkpieceNo6"/>	
+						<MenuRef menuId="ME_WorkpieceNo7"/>	
+						<MenuRef menuId="ME_WorkpieceNo8"/>	
+						<MenuRef menuId="ME_WorkpieceNo9"/>	
+						<MenuRef menuId="ME_WorkpieceNo10"/>	
+						
+						<MenuRef menuId="ME_WorkpieceNo11"/>	
+						<MenuRef menuId="ME_WorkpieceNo12"/>	
+						<MenuRef menuId="ME_WorkpieceNo13"/>	
+						<MenuRef menuId="ME_WorkpieceNo14"/>	
+						<MenuRef menuId="ME_WorkpieceNo15"/>	
+						<MenuRef menuId="ME_WorkpieceNo16"/>	
+						<MenuRef menuId="ME_WorkpieceNo17"/>	
+						<MenuRef menuId="ME_WorkpieceNo18"/>	
+						<MenuRef menuId="ME_WorkpieceNo19"/>	
+						<MenuRef menuId="ME_WorkpieceNo20"/>	
+						
+						<MenuRef menuId="ME_WorkpieceNo21"/>	
+						<MenuRef menuId="ME_WorkpieceNo22"/>	
+						<MenuRef menuId="ME_WorkpieceNo23"/>	
+						<MenuRef menuId="ME_WorkpieceNo24"/>	
+						<MenuRef menuId="ME_WorkpieceNo25"/>	
+						<MenuRef menuId="ME_WorkpieceNo26"/>	
+						<MenuRef menuId="ME_WorkpieceNo27"/>	
+						<MenuRef menuId="ME_WorkpieceNo28"/>	
+						<MenuRef menuId="ME_WorkpieceNo29"/>	
+						<MenuRef menuId="ME_WorkpieceNo30"/>	
+
+						<MenuRef menuId="ME_WorkpieceNo31"/>	
+						<MenuRef menuId="ME_WorkpieceNo32"/>	
+											
+						<RecordItemRef subindex="1" variableId="V_DeviceAccessLocks"/>
+						<VariableRef variableId="V_SystemCommand" accessRightRestriction="wo">
+							<Button buttonValue="130"/>
+						</VariableRef>						
+					</Menu>
+<!-- Records -->
+					<Menu id="ME_WorkpieceNo1">
+						<Name textId="TN_V_WPNo1" />				
+							<RecordItemRef variableId="V_WPNo1" subindex="1"/>	
+							<RecordItemRef variableId="V_WPNo1" subindex="2"/>	
+							<RecordItemRef variableId="V_WPNo1" subindex="3"/>	
+							<RecordItemRef variableId="V_WPNo1" subindex="4"/>		
+							<RecordItemRef variableId="V_WPNo1" subindex="5"/>								
+							<RecordItemRef variableId="V_WPNo1" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo1" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo1" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo1" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo1" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo1" subindex="11" />				
+					</Menu>		
+					<Menu id="ME_WorkpieceNo2">					
+						<Name textId="TN_V_WPNo2"/> 
+							<RecordItemRef variableId="V_WPNo2" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo2" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo2" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo2" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo2" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo2" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo2" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo2" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo2" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo2" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo2" subindex="11" />				
+					</Menu>	
+					<Menu id="ME_WorkpieceNo3">
+						<Name textId="TN_V_WPNo3"/> 
+							<RecordItemRef variableId="V_WPNo3" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo3" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo3" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo3" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo3" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo3" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo3" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo3" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo3" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo3" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo3" subindex="11" />				
+					</Menu>								
+					<Menu id="ME_WorkpieceNo4">
+						<Name textId="TN_V_WPNo4"/> 
+							<RecordItemRef variableId="V_WPNo4" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo4" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo4" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo4" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo4" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo4" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo4" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo4" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo4" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo4" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo4" subindex="11" />			
+					</Menu>		
+					<Menu id="ME_WorkpieceNo5">
+						<Name textId="TN_V_WPNo5"/> 
+							<RecordItemRef variableId="V_WPNo5" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo5" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo5" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo5" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo5" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo5" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo5" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo5" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo5" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo5" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo5" subindex="11" />				
+					</Menu>					
+					<Menu id="ME_WorkpieceNo6">
+						<Name textId="TN_V_WPNo6" />				
+							<RecordItemRef variableId="V_WPNo6" subindex="1"/>	
+							<RecordItemRef variableId="V_WPNo6" subindex="2"/>	
+							<RecordItemRef variableId="V_WPNo6" subindex="3"/>	
+							<RecordItemRef variableId="V_WPNo6" subindex="4"/>		
+							<RecordItemRef variableId="V_WPNo6" subindex="5"/>								
+							<RecordItemRef variableId="V_WPNo6" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo6" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo6" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo6" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo6" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo6" subindex="11" />				
+					</Menu>		
+					<Menu id="ME_WorkpieceNo7">					
+						<Name textId="TN_V_WPNo7"/> 
+							<RecordItemRef variableId="V_WPNo7" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo7" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo7" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo7" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo7" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo7" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo7" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo7" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo7" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo7" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo7" subindex="11" />									
+					</Menu>	
+					<Menu id="ME_WorkpieceNo8">
+						<Name textId="TN_V_WPNo8"/> 
+							<RecordItemRef variableId="V_WPNo8" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo8" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo8" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo8" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo8" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo8" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo8" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo8" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo8" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo8" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo8" subindex="11" />			
+					</Menu>								
+					<Menu id="ME_WorkpieceNo9">
+						<Name textId="TN_V_WPNo9"/> 
+							<RecordItemRef variableId="V_WPNo9" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo9" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo9" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo9" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo9" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo9" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo9" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo9" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo9" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo9" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo9" subindex="11" />				
+					</Menu>		
+					<Menu id="ME_WorkpieceNo10">
+						<Name textId="TN_V_WPNo10"/> 
+							<RecordItemRef variableId="V_WPNo10" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo10" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo10" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo10" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo10" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo10" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo10" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo10" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo10" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo10" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo10" subindex="11" />				
+					</Menu>		
+
+					<Menu id="ME_WorkpieceNo11">
+						<Name textId="TN_V_WPNo11" />				
+							<RecordItemRef variableId="V_WPNo11" subindex="1"/>	
+							<RecordItemRef variableId="V_WPNo11" subindex="2"/>	
+							<RecordItemRef variableId="V_WPNo11" subindex="3"/>	
+							<RecordItemRef variableId="V_WPNo11" subindex="4"/>		
+							<RecordItemRef variableId="V_WPNo11" subindex="5"/>								
+							<RecordItemRef variableId="V_WPNo11" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo11" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo11" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo11" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo11" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo11" subindex="11" />				
+					</Menu>		
+					<Menu id="ME_WorkpieceNo12">					
+						<Name textId="TN_V_WPNo12"/> 
+							<RecordItemRef variableId="V_WPNo12" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo12" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo12" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo12" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo12" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo12" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo12" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo12" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo12" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo12" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo12" subindex="11" />			
+					</Menu>	
+					<Menu id="ME_WorkpieceNo13">
+						<Name textId="TN_V_WPNo13"/> 
+							<RecordItemRef variableId="V_WPNo13" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo13" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo13" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo13" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo13" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo13" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo13" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo13" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo13" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo13" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo13" subindex="11" />			
+					</Menu>								
+					<Menu id="ME_WorkpieceNo14">
+						<Name textId="TN_V_WPNo14"/> 
+							<RecordItemRef variableId="V_WPNo14" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo14" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo14" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo14" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo14" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo14" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo14" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo14" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo14" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo14" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo14" subindex="11" />			
+					</Menu>		
+					<Menu id="ME_WorkpieceNo15">
+						<Name textId="TN_V_WPNo15"/> 
+							<RecordItemRef variableId="V_WPNo15" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo15" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo15" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo15" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo15" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo15" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo15" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo15" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo15" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo15" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo15" subindex="11" />				
+					</Menu>					
+					<Menu id="ME_WorkpieceNo16">
+						<Name textId="TN_V_WPNo16" />				
+							<RecordItemRef variableId="V_WPNo16" subindex="1"/>	
+							<RecordItemRef variableId="V_WPNo16" subindex="2"/>	
+							<RecordItemRef variableId="V_WPNo16" subindex="3"/>	
+							<RecordItemRef variableId="V_WPNo16" subindex="4"/>		
+							<RecordItemRef variableId="V_WPNo16" subindex="5"/>								
+							<RecordItemRef variableId="V_WPNo16" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo16" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo16" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo16" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo16" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo16" subindex="11" />				
+					</Menu>		
+					<Menu id="ME_WorkpieceNo17">					
+						<Name textId="TN_V_WPNo17"/> 
+							<RecordItemRef variableId="V_WPNo17" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo17" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo17" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo17" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo17" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo17" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo17" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo17" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo17" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo17" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo17" subindex="11" />				
+					</Menu>	
+					<Menu id="ME_WorkpieceNo18">
+						<Name textId="TN_V_WPNo18"/> 
+							<RecordItemRef variableId="V_WPNo18" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo18" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo18" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo18" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo18" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo18" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo18" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo18" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo18" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo18" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo18" subindex="11" />			
+					</Menu>								
+					<Menu id="ME_WorkpieceNo19">
+						<Name textId="TN_V_WPNo19"/> 
+							<RecordItemRef variableId="V_WPNo19" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo19" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo19" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo19" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo19" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo19" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo19" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo19" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo19" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo19" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo19" subindex="11" />
+					</Menu>		
+					<Menu id="ME_WorkpieceNo20">
+						<Name textId="TN_V_WPNo20"/> 
+							<RecordItemRef variableId="V_WPNo20" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo20" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo20" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo20" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo20" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo20" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo20" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo20" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo20" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo20" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo20" subindex="11" />			
+					</Menu>	
+					
+					<Menu id="ME_WorkpieceNo21">
+						<Name textId="TN_V_WPNo21" />				
+							<RecordItemRef variableId="V_WPNo21" subindex="1"/>	
+							<RecordItemRef variableId="V_WPNo21" subindex="2"/>	
+							<RecordItemRef variableId="V_WPNo21" subindex="3"/>	
+							<RecordItemRef variableId="V_WPNo21" subindex="4"/>		
+							<RecordItemRef variableId="V_WPNo21" subindex="5"/>								
+							<RecordItemRef variableId="V_WPNo21" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo21" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo21" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo21" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo21" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo21" subindex="11" />				
+					</Menu>		
+					<Menu id="ME_WorkpieceNo22">					
+						<Name textId="TN_V_WPNo22"/> 
+							<RecordItemRef variableId="V_WPNo22" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo22" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo22" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo22" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo22" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo22" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo22" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo22" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo22" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo22" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo22" subindex="11" />				
+					</Menu>	
+					<Menu id="ME_WorkpieceNo23">
+						<Name textId="TN_V_WPNo23"/> 
+							<RecordItemRef variableId="V_WPNo23" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo23" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo23" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo23" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo23" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo23" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo23" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo23" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo23" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo23" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo23" subindex="11" />				
+					</Menu>								
+					<Menu id="ME_WorkpieceNo24">
+						<Name textId="TN_V_WPNo24"/> 
+							<RecordItemRef variableId="V_WPNo24" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo24" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo24" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo24" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo24" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo24" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo24" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo24" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo24" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo24" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo24" subindex="11" />			
+					</Menu>		
+					<Menu id="ME_WorkpieceNo25">
+						<Name textId="TN_V_WPNo25"/> 
+							<RecordItemRef variableId="V_WPNo25" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo25" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo25" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo25" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo25" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo25" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo25" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo25" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo25" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo25" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo25" subindex="11" />			
+					</Menu>					
+					<Menu id="ME_WorkpieceNo26">
+						<Name textId="TN_V_WPNo26" />				
+							<RecordItemRef variableId="V_WPNo26" subindex="1"/>	
+							<RecordItemRef variableId="V_WPNo26" subindex="2"/>	
+							<RecordItemRef variableId="V_WPNo26" subindex="3"/>	
+							<RecordItemRef variableId="V_WPNo26" subindex="4"/>		
+							<RecordItemRef variableId="V_WPNo26" subindex="5"/>								
+							<RecordItemRef variableId="V_WPNo26" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo26" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo26" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo26" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo26" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo26" subindex="11" />				
+					</Menu>		
+					<Menu id="ME_WorkpieceNo27">					
+						<Name textId="TN_V_WPNo27"/> 
+							<RecordItemRef variableId="V_WPNo27" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo27" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo27" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo27" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo27" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo27" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo27" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo27" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo27" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo27" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo27" subindex="11" />			
+					</Menu>	
+					<Menu id="ME_WorkpieceNo28">
+						<Name textId="TN_V_WPNo28"/> 
+							<RecordItemRef variableId="V_WPNo28" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo28" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo28" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo28" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo28" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo28" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo28" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo28" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo28" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo28" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo28" subindex="11" />			
+					</Menu>								
+					<Menu id="ME_WorkpieceNo29">
+						<Name textId="TN_V_WPNo29"/> 
+							<RecordItemRef variableId="V_WPNo29" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo29" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo29" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo29" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo29" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo29" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo29" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo29" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo29" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo29" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo29" subindex="11" />			
+					</Menu>		
+					<Menu id="ME_WorkpieceNo30">
+						<Name textId="TN_V_WPNo30"/> 
+							<RecordItemRef variableId="V_WPNo30" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo30" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo30" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo30" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo30" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo30" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo30" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo30" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo30" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo30" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo30" subindex="11" />			
+					</Menu>						
+					
+					<Menu id="ME_WorkpieceNo31">
+						<Name textId="TN_V_WPNo31"/> 
+							<RecordItemRef variableId="V_WPNo31" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo31" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo31" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo31" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo31" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo31" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo31" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo31" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo31" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo31" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo31" subindex="11" />			
+					</Menu>		
+					<Menu id="ME_WorkpieceNo32">
+						<Name textId="TN_V_WPNo32"/> 
+							<RecordItemRef variableId="V_WPNo32" subindex="1" />	
+							<RecordItemRef variableId="V_WPNo32" subindex="2" />	
+							<RecordItemRef variableId="V_WPNo32" subindex="3" />	
+							<RecordItemRef variableId="V_WPNo32" subindex="4" />		
+							<RecordItemRef variableId="V_WPNo32" subindex="5" />								
+							<RecordItemRef variableId="V_WPNo32" subindex="6"/>		
+							<RecordItemRef variableId="V_WPNo32" subindex="7" />	
+							<RecordItemRef variableId="V_WPNo32" subindex="8" />		
+							<RecordItemRef variableId="V_WPNo32" subindex="9" />									
+							<RecordItemRef variableId="V_WPNo32" subindex="10" />			
+							<RecordItemRef variableId="V_WPNo32" subindex="11" />			
+					</Menu>		
+					<Menu id="ME_Diag">
+						<VariableRef variableId="V_ErrorCount"/>
+						<VariableRef variableId="V_DeviceStatus"/>
+						<VariableRef variableId="V_DetailedDeviceStatus"/>
+					</Menu>			
+				</MenuCollection>
+				<ObserverRoleMenuSet>
+					<IdentificationMenu menuId="ME_Ident"/>
+					<ObservationMenu menuId="ME_Observe"/>
+					<DiagnosisMenu menuId="ME_Diag"/>
+				</ObserverRoleMenuSet>
+				<MaintenanceRoleMenuSet>
+					<IdentificationMenu menuId="ME_Ident"/>
+					<ParameterMenu menuId="ME_Param"/>
+					<ObservationMenu menuId="ME_Observe"/>
+					<DiagnosisMenu menuId="ME_Diag"/>
+				</MaintenanceRoleMenuSet>
+				<SpecialistRoleMenuSet>
+					<IdentificationMenu menuId="ME_Ident"/>
+					<ParameterMenu menuId="ME_Param"/>
+					<ObservationMenu menuId="ME_Observe"/>
+					<DiagnosisMenu menuId="ME_Diag"/>
+				</SpecialistRoleMenuSet>
+			</UserInterface>
+		</DeviceFunction>
+	</ProfileBody>
+	<CommNetworkProfile xsi:type="IOLinkCommNetworkProfileT" iolinkRevision="V1.1">
+		<TransportLayers>
+			<PhysicalLayer minCycleTime="10000" sioSupported="true" bitrate="COM3" mSequenceCapability="43">
+				<Connection xsi:type="M12-5ConnectionT">
+					<ProductRef productId="GEH6060IL"/>
+					<Description textId="TD_Connection"/>
+					<Wire1 function="L+"/>
+					<Wire2 color="WH" function="P24"/>
+					<Wire3 function="L-"/>
+					<Wire4 function="C/Q"/>
+					<Wire5 color="GY" function="N24"/>
+				</Connection>
+				<Connection xsi:type="M12-5ConnectionT">
+					<ProductRef productId="GEH6140IL"/>
+					<Description textId="TD_Connection"/>
+					<Wire1 function="L+"/>
+					<Wire2 color="WH" function="P24"/>
+					<Wire3 function="L-"/>
+					<Wire4 function="C/Q"/>
+					<Wire5 color="GY" function="N24"/>
+				</Connection>
+				<Connection xsi:type="M12-5ConnectionT">
+					<ProductRef productId="GEH6180IL"/>
+					<Description textId="TD_Connection"/>
+					<Wire1 function="L+"/>
+					<Wire2 color="WH" function="P24"/>
+					<Wire3 function="L-"/>
+					<Wire4 function="C/Q"/>
+					<Wire5 color="GY" function="N24"/>
+				</Connection>
+			</PhysicalLayer>
+		</TransportLayers>
+		<Test>
+			<Config1 index="200" testValue="0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00"></Config1>
+			<Config2 index="1000" testValue="0x00"></Config2>
+			<Config3 index="200" testValue="0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00"></Config3>
+			<Config7 index="155">
+				<EventTrigger disappearValue="2" appearValue="1"></EventTrigger>
+				<EventTrigger disappearValue="4" appearValue="3"></EventTrigger>
+			</Config7>
+		</Test>
+	</CommNetworkProfile>
+	<ExternalTextCollection>
+		<PrimaryLanguage xml:lang="en">
+			<Text id="T_VendorText" value="THE KNOW-HOW FACTORY"/>
+			<Text id="T_VendorUrl" value="http://www.zimmer-group.com"/>
+			<Text id="T_DeviceName" value="GEH6060IL/GEH6140IL/GEH6180IL"/>
+			<Text id="T_DeviceFamily" value="GEH6000IL"/>
+
+			<Text id="TN_ProductName1" value="GEH6060IL"/>
+			<Text id="TD_ProductText1" value="gripper el.: 60mm-stroke per jaw"/>	
+			<Text id="TN_ProductName2" value="GEH6140IL"/>
+			<Text id="TD_ProductText2" value="gripper el.: 140mm-stroke per jaw"/>	
+			<Text id="TN_ProductName3" value="GEH6180IL"/>
+			<Text id="TD_ProductText3" value="gripper el.: 180mm-stroke per jaw"/>		
+
+	
+<!-- Start mandatory variables -->	
+			<Text id="TN_V_ro_Statusword" value="Statusword"/>
+			<Text id="TN_V_ro_Diagnose" value="Diagnose"/>	
+			<Text id="TN_V_ro_Cyclecounter" value="Cycle Counter"/>
+			<Text id="TN_V_ro_Temperature" value="Temperature"/>
+			<Text id="TN_V_ro_Controlword" value="Controlword"/>	
+			<Text id="TN_V_ro_Errorcode" value="Error-Code"/>
+			<Text id="TN_V_ro_Errorcounter" value="Error-Counter"/>
+<!-- End mandatory variables -->				
+
+<!-- Start Device specific variables -->			
+			<Text id="TN_V_ro_Actualposition" value="Actual Position"/>
+			<Text id="TN_V_ro_Teachposition" value="Teach Position"/>
+			<Text id="TN_V_ro_Workpieceno" value="Workpiece No"/>				
+			<Text id="TN_V_ro_Devicemode" value="Device Mode"/>
+			<Text id="TN_V_ro_Positiontolerance" value="Position Tolerance"/>
+			<Text id="TN_V_ro_Gripforce" value="Grip Force"/>	
+			<Text id="TN_V_ro_Drivevelocity" value="Drive Velocity "/>
+			
+			<Text id="TN_V_ro_Baseposition" value="Base Position"/>
+			<Text id="TN_V_ro_Shiftposition" value="Shift Position"/>
+			<Text id="TN_V_ro_Workposition" value="Work Position"/>		
+			
+			<Text id="TN_V_ro_acceleration" value="Acceleration "/>
+			<Text id="TN_V_ro_deceleration" value="Deceleration"/>
+			<Text id="TN_V_ro_jerk" value="Jerk"/>	
+<!-- End Device specific variables -->	
+		
+<!-- Records -->			
+			<Text id="TN_V_WPNo1" value="Workpiece No: 1 "/>
+			<Text id="TN_V_WPNo2" value="Workpiece No: 2 "/>
+			<Text id="TN_V_WPNo3" value="Workpiece No: 3 "/>
+			<Text id="TN_V_WPNo4" value="Workpiece No: 4 "/>
+			<Text id="TN_V_WPNo5" value="Workpiece No: 5 "/>
+			<Text id="TN_V_WPNo6" value="Workpiece No: 6 "/>
+			<Text id="TN_V_WPNo7" value="Workpiece No: 7 "/>
+			<Text id="TN_V_WPNo8" value="Workpiece No: 8 "/>
+			<Text id="TN_V_WPNo9" value="Workpiece No: 9 "/>
+			<Text id="TN_V_WPNo10" value="Workpiece No: 10 "/>	
+			
+			<Text id="TN_V_WPNo11" value="Workpiece No: 11 "/>
+			<Text id="TN_V_WPNo12" value="Workpiece No: 12 "/>
+			<Text id="TN_V_WPNo13" value="Workpiece No: 13 "/>
+			<Text id="TN_V_WPNo14" value="Workpiece No: 14 "/>
+			<Text id="TN_V_WPNo15" value="Workpiece No: 15 "/>
+			<Text id="TN_V_WPNo16" value="Workpiece No: 16 "/>
+			<Text id="TN_V_WPNo17" value="Workpiece No: 17 "/>
+			<Text id="TN_V_WPNo18" value="Workpiece No: 18 "/>
+			<Text id="TN_V_WPNo19" value="Workpiece No: 19 "/>
+			<Text id="TN_V_WPNo20" value="Workpiece No: 20 "/>	
+			
+			<Text id="TN_V_WPNo21" value="Workpiece No: 21 "/>
+			<Text id="TN_V_WPNo22" value="Workpiece No: 22 "/>
+			<Text id="TN_V_WPNo23" value="Workpiece No: 23 "/>
+			<Text id="TN_V_WPNo24" value="Workpiece No: 24 "/>
+			<Text id="TN_V_WPNo25" value="Workpiece No: 25 "/>
+			<Text id="TN_V_WPNo26" value="Workpiece No: 26 "/>
+			<Text id="TN_V_WPNo27" value="Workpiece No: 27 "/>
+			<Text id="TN_V_WPNo28" value="Workpiece No: 28 "/>
+			<Text id="TN_V_WPNo29" value="Workpiece No: 29 "/>
+			<Text id="TN_V_WPNo30" value="Workpiece No: 30 "/>		
+			
+			<Text id="TN_V_WPNo31" value="Workpiece No: 31 "/>
+			<Text id="TN_V_WPNo32" value="Workpiece No: 32 "/>
+			
+			<Text id="TN_V_Record1" value="Base Position"/>
+			<Text id="TN_V_Record2" value="Shift Position"/>
+			<Text id="TN_V_Record3" value="Teach Position"/>
+			<Text id="TN_V_Record4" value="Work Position"/>
+			<Text id="TN_V_Record5" value="Device Mode"/>
+			<Text id="TN_V_Record6" value="Grip Force"/>	
+			<Text id="TN_V_Record7" value="Drive Velocity"/>
+			<Text id="TN_V_Record8" value="Position Tolerance"/>
+			<Text id="TN_V_Record9" value="Acceleration"/>
+			<Text id="TN_V_Record10" value="Deceleration"/>
+			<Text id="TN_V_Record11" value="Jerk"/>
+		
+			<Text id="TN_PDI" value="Process Input Data"/>
+			<Text id="TN_PDI_Statusword" value="Statusword"/>
+			<Text id="TN_PDI_Diagnose" value="Diagnose"/>
+			<Text id="TN_PDI_ActualPosition" value="Actual Position"/>
+			<Text id="TN_PDO" value="Process Output Data"/>
+			
+			<Text id="TN_PDO_Controlword" value="Controlword"/>
+			<Text id="TN_PDO_WorkPieceNo" value="Workpiece No"/>
+			<Text id="TN_PDO_Reserve" value="Reserve"/>
+			<Text id="TN_PDO_GripMode" value="Device Mode"/>
+			<Text id="TN_PDO_GripForce" value="Grip Force"/>
+			<Text id="TN_PDO_PositionTolerance" value="Position Tolerance"/>
+			<Text id="TN_PDO_DriveVelocity" value="Drive Velocity"/>
+			<Text id="TN_PDO_BasePosition" value="Base Position"/>
+			<Text id="TN_PDO_ShiftPosition" value="Shift Position"/>
+			<Text id="TN_PDO_TeachPosition" value="Teach Position"/>
+			<Text id="TN_PDO_WorkPosition" value="Work Position"/>
+
+			<Text id="TD_Connection" value="Pin 2 can be used to provide additional power"/>
+		</PrimaryLanguage>
+	</ExternalTextCollection>
+	<Stamp crc="4062196996"><Checker name="IODD-Checker V1.1.1" version="V1.1.1.0"/></Stamp>
+</IODevice>

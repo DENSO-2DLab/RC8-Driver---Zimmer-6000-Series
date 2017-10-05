@@ -82,6 +82,10 @@ Function ZIdle(ZGripper As Variant) As Integer
 	Call ZSet_CtrlWord(ZGripper, 0)		' Stop Transfer Data
 	
 	ZIdle = ZGet_Error_Status(ZGripper)	' Return Error Status
+
+	If DEBUG_MODE = 1 Then 
+		PrintDbg STR(now()), ": Zidle() Return: ", Hex(ZIdle) 
+	End If
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -98,6 +102,8 @@ Function ZGripperReset(ZGripper As Variant) As Integer
 	Call ZSet_CtrlWord(ZGripper, 0)					' Stop Transfer Data
 
 	ZGripperReset = ZGet_Error_Status(ZGripper)		' Return Error Status
+	
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZGripperReset() Return: ", Hex(ZGripperReset)
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -109,6 +115,8 @@ Function ZResetDirFlag(ZGripper As Variant) As Integer
 	
 	' Return Error Status
 	ZResetDirFlag = ZGet_Error_Status(ZGripper)
+	
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZResetDirFlag() Return: ", Hex(ZResetDirFlag) 
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -121,29 +129,42 @@ Function ZMotor(ZGripper As Variant, zMotorState As Integer) As Integer
 	currDeviceMode = ZGet_DeviceMode(ZGripper)
 	
 	If zMotorState = 1 Then 
-		' Set DeviceMode to Swith off Motor / Stop Gripper Movement
+		' Turn Off the motor (Skip procedure if motor state is already off)
+		If ZGet_MotorOn_Status(ZGripper) = 1 then Exit Function
 		Call ZSet_DeviceMode(ZGripper, 3)
-		Wait ZGet_MotorOn_Status(ZGripper) = 1
+		Wait ZGet_MotorOn_Status(ZGripper) = 1, GLOBAL_TIMEOUT
 	Else
+		' Turn On the motor (Skip procedure if motor state is already on)
+		If ZGet_MotorOn_Status(ZGripper) = 0 then Exit Function
 		Call ZSet_DeviceMode(ZGripper, 5)	
-		Wait ZGet_MotorOn_Status(ZGripper) = 0
+		Wait ZGet_MotorOn_Status(ZGripper) = 0, GLOBAL_TIMEOUT
 	End If 
 
 	Call ZSet_DeviceMode(ZGripper, currDeviceMode)	' Set DeviceMode to Previous Mode
 	Call ZSet_CtrlWord(ZGripper, 0)					' Stop Transfer Data
 
 	ZMotor = ZGet_Error_Status(ZGripper)			' Return Error Status
+	
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZMotor(", STR(zMotorState),_
+									") Return: ", Hex(ZMotor)
 End Function
 
 '----------------------------------------------------------------------------------------
 ' ZHome
 '----------------------------------------------------------------------------------------
 Function ZHome(ZGripper As Variant) As Integer
+	
+	If ZGet_HomePoseOK_Status(ZGripper) = 1 Then Exit Function
+
 	Call ZSet_CtrlWord(ZGripper, 1)		' Start Transfer Data
 	Call ZSet_DeviceMode(ZGripper, 10)	' Set DeviceMode to Homing
 	Call ZSet_CtrlWord(ZGripper, 0)		' Stop Transfer Data
+
+	Wait ZGet_HomePoseOK_Status(ZGripper) = 1, GLOBAL_TIMEOUT
 	
 	ZHome = ZGet_Error_Status(ZGripper)	' Return Error Status
+
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZHome() Return: ", Hex(ZHome) 
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -167,30 +188,46 @@ Function ZJog(ZGripper As Variant, jogDirection As Integer) As Integer
 		' Get +Jog Active Status
 		ZJog = ZGet_Error_Status(ZGripper)	' Return Error Status
 	End If
+
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZJog() Return: ", Hex(ZJog) 
 End Function
 
 '----------------------------------------------------------------------------------------
 ' ZOpen 
 '----------------------------------------------------------------------------------------
 Function ZOpen(ZGripper As Variant) As Integer
+
+	If ZGet_BasePose_Status(ZGripper) = 1 Then Exit Function
+
 	Call ZSet_CtrlWord(ZGripper, 256)		' Transfer Data to Motor Control System
-
-	Wait ZGet_InMotion_Status(ZGripper) = 1
-	Wait ZGet_CompleteMovement_Status(ZGripper) = 1
-
+	
+	Wait ZGet_InMotion_Status(ZGripper) = 1, GLOBAL_TIMEOUT
+	Wait ZGet_InMotion_Status(ZGripper) = 0, GLOBAL_TIMEOUT 
+	
+	Wait ZGet_CompleteMovement_Status(ZGripper) = 1, GLOBAL_TIMEOUT
+	
 	ZOpen = ZGet_Error_Status(ZGripper)		' Return Error Status
+
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZOpen() Return: ", Hex(ZOpen) 
 End Function
 
 '----------------------------------------------------------------------------------------
 ' ZClose
 '----------------------------------------------------------------------------------------
 Function ZClose(ZGripper As Variant) As Integer
+
+	If ZGet_WorkPose_Status(ZGripper) = 1 Then Exit Function
+	
 	Call ZSet_CtrlWord(ZGripper, 512)		' Transfer Data to Motor Control System
 	
-	Wait ZGet_InMotion_Status(ZGripper) = 1
-	Wait ZGet_CompleteMovement_Status(ZGripper) = 1
-
+	Wait ZGet_InMotion_Status(ZGripper) = 1, GLOBAL_TIMEOUT
+	Wait ZGet_InMotion_Status(ZGripper) = 0, GLOBAL_TIMEOUT
+	
+	Wait ZGet_CompleteMovement_Status(ZGripper) = 1, GLOBAL_TIMEOUT
+	
 	ZClose = ZGet_Error_Status(ZGripper)	' Return Error Status
+
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZClose() Return: ", Hex(ZClose) 
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -223,7 +260,10 @@ Function ZSetMotionParam(ZGripper As Variant,_
 	Call ZSet_CtrlWord(ZGripper, 0)	
 	
 	' Return Error Status	
-	ZSetMotionParam = ZGet_Error_Status(ZGripper)					
+	ZSetMotionParam = ZGet_Error_Status(ZGripper)	
+	
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZSetMotionParam() Return: ",_
+									Hex(ZSetMotionParam) 				
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -235,6 +275,8 @@ Function ZTeachPos(ZGripper As Variant) As Integer
 
 	' Return Error Status	
 	ZTeachPos = ZGet_Error_Status(ZGripper)	
+
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZTeachPos() Return: ", Hex(ZTeachPos) 
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -247,17 +289,20 @@ Function ZSaveWorkRecipe(ZGripper As Variant, workRecipe As Variant) As Integer
 
 	' Write PDU data to the Workpiece Recipe
 	Call ZSet_CtrlWord(ZGripper, 2)
-	Wait ZGet_DataTransferOK_Status(ZGripper) = 0 
+	Wait ZGet_DataTransferOK_Status(ZGripper) = 0, GLOBAL_TIMEOUT 
 
 	' Start Transfer Data
 	Call ZSet_CtrlWord(ZGripper, 1)
-	Wait ZGet_DataTransferOK_Status(ZGripper) = 1 
+	Wait ZGet_DataTransferOK_Status(ZGripper) = 1, GLOBAL_TIMEOUT 
 
 	' Stop Transfer Data
 	Call ZSet_CtrlWord(ZGripper, 0)
 
 	' Return Error Status	
 	ZSaveWorkRecipe = ZGet_Error_Status(ZGripper)
+
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZSaveWorkPiece(", STR(workRecipe),_
+									") Return: ", Hex(ZSaveWorkRecipe)
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -273,4 +318,7 @@ Function ZLoadWorkRecipe(ZGripper As Variant, workRecipe As Variant) As Integer
 
 	' Return Error Status	
 	ZLoadWorkRecipe = ZGet_Error_Status(ZGripper)	
+
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZLoadWorkRecipe(", STR(workRecipe),_
+									") Return: ", Hex(ZLoadWorkRecipe) 
 End Function
