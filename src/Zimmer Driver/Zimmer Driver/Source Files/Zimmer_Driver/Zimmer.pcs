@@ -84,7 +84,7 @@ Function ZIdle(ZGripper As Variant) As Integer
 	ZIdle = ZGet_Error_Status(ZGripper)	' Return Error Status
 
 	If DEBUG_MODE = 1 Then 
-		PrintDbg STR(now()), ": Zidle() Return: ", Hex(ZIdle) 
+		PrintDbg STR(now()), ": Zidle() Error: ", Hex(ZGet_Diagnostics(ZGripper)) 
 	End If
 End Function
 
@@ -103,7 +103,7 @@ Function ZGripperReset(ZGripper As Variant) As Integer
 
 	ZGripperReset = ZGet_Error_Status(ZGripper)		' Return Error Status
 	
-	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZGripperReset() Return: ", Hex(ZGripperReset)
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZGripperReset() Error: ", Hex(ZGet_Diagnostics(ZGripper))
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -116,7 +116,7 @@ Function ZResetDirFlag(ZGripper As Variant) As Integer
 	' Return Error Status
 	ZResetDirFlag = ZGet_Error_Status(ZGripper)
 	
-	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZResetDirFlag() Return: ", Hex(ZResetDirFlag) 
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZResetDirFlag() Error: ", Hex(ZGet_Diagnostics(ZGripper)) 
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ Function ZMotor(ZGripper As Variant, zMotorState As Integer) As Integer
 	ZMotor = ZGet_Error_Status(ZGripper)			' Return Error Status
 	
 	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZMotor(", STR(zMotorState),_
-									") Return: ", Hex(ZMotor)
+									") Error: ", Hex(ZGet_Diagnostics(ZGripper))
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -164,7 +164,7 @@ Function ZHome(ZGripper As Variant) As Integer
 	
 	ZHome = ZGet_Error_Status(ZGripper)	' Return Error Status
 
-	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZHome() Return: ", Hex(ZHome) 
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZHome() Error: ", Hex(ZGet_Diagnostics(ZGripper)) 
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -189,7 +189,7 @@ Function ZJog(ZGripper As Variant, jogDirection As Integer) As Integer
 		ZJog = ZGet_Error_Status(ZGripper)	' Return Error Status
 	End If
 
-	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZJog() Return: ", Hex(ZJog) 
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZJog() Error: ", Hex(ZGet_Diagnostics(ZGripper)) 
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -208,7 +208,7 @@ Function ZOpen(ZGripper As Variant) As Integer
 	
 	ZOpen = ZGet_Error_Status(ZGripper)		' Return Error Status
 
-	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZOpen() Return: ", Hex(ZOpen) 
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZOpen() Error: ", Hex(ZGet_Diagnostics(ZGripper)) 
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -227,7 +227,7 @@ Function ZClose(ZGripper As Variant) As Integer
 	
 	ZClose = ZGet_Error_Status(ZGripper)	' Return Error Status
 
-	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZClose() Return: ", Hex(ZClose) 
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZClose() Error: ", Hex(ZGet_Diagnostics(ZGripper)) 
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -255,15 +255,16 @@ Function ZSetMotionParam(ZGripper As Variant,_
 	Call ZSet_ShiftPose(ZGripper, posShift)
 	Call ZSet_TeachPose(ZGripper, posTeach)
 	Call ZSet_WorkPose(ZGripper, posWork)
-
+	
 	' Stop Transfer Data
+	Delay SYNC_TIMEOUT
 	Call ZSet_CtrlWord(ZGripper, 0)	
 	
 	' Return Error Status	
 	ZSetMotionParam = ZGet_Error_Status(ZGripper)	
 	
-	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZSetMotionParam() Return: ",_
-									Hex(ZSetMotionParam) 				
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZSetMotionParam() Error: ",_
+									Hex(ZGet_Diagnostics(ZGripper)) 				
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -276,7 +277,7 @@ Function ZTeachPos(ZGripper As Variant) As Integer
 	' Return Error Status	
 	ZTeachPos = ZGet_Error_Status(ZGripper)	
 
-	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZTeachPos() Return: ", Hex(ZTeachPos) 
+	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZTeachPos() Error: ", Hex(ZGet_Diagnostics(ZGripper)) 
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -302,7 +303,7 @@ Function ZSaveWorkRecipe(ZGripper As Variant, workRecipe As Variant) As Integer
 	ZSaveWorkRecipe = ZGet_Error_Status(ZGripper)
 
 	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZSaveWorkPiece(", STR(workRecipe),_
-									") Return: ", Hex(ZSaveWorkRecipe)
+									") Error: ", Hex(ZGet_Diagnostics(ZGripper))
 End Function
 
 '----------------------------------------------------------------------------------------
@@ -320,5 +321,5 @@ Function ZLoadWorkRecipe(ZGripper As Variant, workRecipe As Variant) As Integer
 	ZLoadWorkRecipe = ZGet_Error_Status(ZGripper)	
 
 	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZLoadWorkRecipe(", STR(workRecipe),_
-									") Return: ", Hex(ZLoadWorkRecipe) 
+									") Error: ", Hex(ZGet_Diagnostics(ZGripper)) 
 End Function

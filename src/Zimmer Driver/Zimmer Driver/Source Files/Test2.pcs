@@ -1,6 +1,6 @@
 '!TITLE "Denso robot program"
 
-#Include "Zimmer.h"
+#Include "Zimmer_Driver/Zimmer.h"
 
 Dim IRStrAddr(4) As Integer
 Dim HRStrAddr(4) As Integer
