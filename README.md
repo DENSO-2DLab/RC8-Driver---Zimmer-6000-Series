@@ -17,5 +17,6 @@ Driver for easy integration between Zimmer Gripper and RC8/RC8A Controller.
 
 Feel free to contribute by fixing any bugs or adding new features to this repository. Once you are ready to share open a pull request.
 
-### License
+## License
 
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
