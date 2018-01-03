@@ -1,4 +1,4 @@
-# RC8-Driver - Zimmer 6000 Series
+# RC8 Driver - Zimmer 6000 Series
 
 This is a driver created in Pacscript to communicate to a Zimmer GEH6060IL servo gripper
 
