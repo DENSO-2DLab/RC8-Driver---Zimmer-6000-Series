@@ -84,7 +84,7 @@ Function ZIdle(ZGripper As Variant) As Integer
 	ZIdle = ZGet_Error_Status(ZGripper)	' Return Error Status
 
 	If DEBUG_MODE = 1 Then 
-		PrintDbg STR(now()), ": Zidle() Error: ", Hex(ZGet_Diagnostics(ZGripper)) 
+		PrintDbg now, ": Zidle() Error: ", Hex(ZGet_Diagnostics(ZGripper)) 
 	End If
 End Function
 
@@ -187,6 +187,8 @@ Function ZJog(ZGripper As Variant, jogDirection As Integer) As Integer
 
 		' Get +Jog Active Status
 		ZJog = ZGet_Error_Status(ZGripper)	' Return Error Status
+	Else
+		Call ZSet_CtrlWord(ZGripper, 0)
 	End If
 
 	If DEBUG_MODE = 1 Then PrintDbg Now, ": ZJog() Error: ", Hex(ZGet_Diagnostics(ZGripper)) 
@@ -201,10 +203,10 @@ Function ZOpen(ZGripper As Variant) As Integer
 
 	Call ZSet_CtrlWord(ZGripper, 256)		' Transfer Data to Motor Control System
 	
-	Wait ZGet_InMotion_Status(ZGripper) = 1, GLOBAL_TIMEOUT
-	Wait ZGet_InMotion_Status(ZGripper) = 0, GLOBAL_TIMEOUT 
+'	Wait ZGet_InMotion_Status(ZGripper) = 1, GLOBAL_TIMEOUT
+'	Wait ZGet_InMotion_Status(ZGripper) = 0, GLOBAL_TIMEOUT 
 	
-	Wait ZGet_CompleteMovement_Status(ZGripper) = 1, GLOBAL_TIMEOUT
+'	Wait ZGet_CompleteMovement_Status(ZGripper) = 1, GLOBAL_TIMEOUT
 	
 	ZOpen = ZGet_Error_Status(ZGripper)		' Return Error Status
 
@@ -220,10 +222,10 @@ Function ZClose(ZGripper As Variant) As Integer
 	
 	Call ZSet_CtrlWord(ZGripper, 512)		' Transfer Data to Motor Control System
 	
-	Wait ZGet_InMotion_Status(ZGripper) = 1, GLOBAL_TIMEOUT
-	Wait ZGet_InMotion_Status(ZGripper) = 0, GLOBAL_TIMEOUT
+'	Wait ZGet_InMotion_Status(ZGripper) = 1, GLOBAL_TIMEOUT
+'	Wait ZGet_InMotion_Status(ZGripper) = 0, GLOBAL_TIMEOUT
 	
-	Wait ZGet_CompleteMovement_Status(ZGripper) = 1, GLOBAL_TIMEOUT
+'	Wait ZGet_CompleteMovement_Status(ZGripper) = 1, GLOBAL_TIMEOUT
 	
 	ZClose = ZGet_Error_Status(ZGripper)	' Return Error Status
 
