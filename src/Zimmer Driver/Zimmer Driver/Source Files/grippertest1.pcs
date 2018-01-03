@@ -1,0 +1,162 @@
+'!TITLE "Denso robot program"
+
+#Include "Zimmer_Driver\Zimmer.h"
+#Include "VAR_TAB.h"
+
+Dim IRStrAddr( 4 ) As Integer
+Dim HRStrAddr( 4 ) As Integer
+
+Sub Main
+	
+	' Zimmer Variables
+	Dim ctrl_word As Integer
+	Dim device_mode As Integer
+	Dim workpiece_no As Integer
+	Dim position_tolerance As Integer
+	Dim gripping_force As Integer
+	Dim drive_velocity As Integer
+	Dim base_position As Integer
+	Dim shift_position As Integer
+	Dim teach_position As Integer
+	Dim work_position As Integer
+	Dim status_word As Integer
+	Dim diagnostics As Integer
+	Dim actual_position As Single
+	
+	IRStrAddr( 0 ) = &h003 ' Port1 Inputs
+	IRStrAddr( 1 ) = &h013 ' Port2 Inputs
+	IRStrAddr( 2 ) = &h023 ' Port3 Inputs
+	IRStrAddr( 3 ) = &h033 ' Port4 Inputs
+	
+	HRStrAddr( 0 ) = &h802 ' Port1 Outputs
+	HRStrAddr( 1 ) = &h812 ' Port2 Outputs
+	HRStrAddr( 2 ) = &h822 ' Port3 Outputs
+	HRStrAddr( 3 ) = &h832 ' Port4 Outputs
+	
+	Dim fResult As Variant 
+	fResult = ZConnect( "10.0.0.2", 1, IRStrAddr( 0 ), HRStrAddr( 0 ) )
+	
+	' --- INPUTS REGISTERS ---
+	status_word = ZGet_Status( fResult )
+	
+	Dim fStatus( 15 ) As Integer
+	fStatus( 0 ) = ZGet_HomePoseOK_Status( fResult )
+	fStatus( 1 ) = ZGet_MotorOn_Status( fResult )
+	fStatus( 2 ) = ZGet_InMotion_Status( fResult )
+	fStatus( 3 ) = ZGet_CompleteMovement_Status( fResult ) 
+	fStatus( 4 ) = ZGet_NJogModeActive_Status( fResult )
+	fStatus( 5 ) = ZGet_PJogModeActive_Status( fResult )
+	fStatus( 6 ) = ZGet_GripCtrlSysActive_Status( fResult )
+	fStatus( 7 ) = ZGet_CtrlError_Status( fResult )
+	fStatus( 8 ) = ZGet_BasePose_Status( fResult )
+	fStatus( 9 ) = ZGet_TeachPose_Status( fResult )
+	fStatus( 10 ) = ZGet_WorkPose_Status( fResult )
+	fStatus( 11 ) = ZGet_UndefPose_Status( fResult )
+	fStatus( 12 ) = ZGet_DataTransferOK_Status( fResult )
+	fStatus( 13 ) = ZGet_CtrlWordx100_Status( fResult )
+	fStatus( 14 ) = ZGet_CtrlWordx200_Status( fResult )
+	fStatus( 15 ) = ZGet_Error_Status( fResult )
+	
+	I1 = fstatus(0)
+	I2 = fstatus(1)
+	I3 = fstatus(2)
+	I4 = fstatus(3)
+	I5 = fstatus(4)
+	I6 = fstatus(5)
+	I7 = fstatus(6)
+	I8 = fstatus(7)
+	I9 = fstatus(8)
+	I10 = fstatus(9)
+	I11 = fstatus(10)
+	I12 = fstatus(11)
+	I13 = fstatus(12)
+	I14 = fstatus(13)
+	I15 = fstatus(14)
+	I16 = fstatus(15)
+
+	diagnostics = ZGet_Diagnostics( fResult )
+	actual_position = ZGet_CurPos( fResult )
+	
+	' --- HOLDING REGISTERS (READ) --- 
+	ctrl_word = ZGet_CtrlWord( fResult )
+	device_mode = ZGet_DeviceMode( fResult )
+	workpiece_no = ZGet_WorkpieceNo( fResult )
+	position_tolerance = ZGet_PoseTolerance( fResult )
+	gripping_force = ZGet_GripForce( fResult )
+	drive_velocity = ZGet_DriveVelocity( fResult )
+	base_position = ZGet_BasePose( fResult )
+	shift_position = ZGet_ShiftPose( fResult )
+	teach_position = ZGet_TeachPose( fResult )
+	work_position = ZGet_WorkPose( fResult )
+	
+	'	' --- HOLDING REGISTERS (WRITE) --- 
+	'	Call ZSet_CtrlWord(fResult, 1)
+	'	Call ZSet_DeviceMode(fResult, 1)
+	'	Call ZSet_WorkpieceNo(fResult, 33)
+	'	Call ZSet_PoseTolerance(fResult, 1)
+	'	Call ZSet_GripForce(fResult, 1)
+	'	Call ZSet_DriveVelocity(fResult, 1)
+	'	Call ZSet_BasePose(fResult, 1)
+	'	Call ZSet_ShiftPose(fResult, 1)
+	'	Call ZSet_TeachPose(fResult, 1)
+	'	Call ZSet_WorkPose(fResult, 1)
+	
+	' Set Motion Profile
+	Dim fMoveResult As Integer
+	
+'	do while 1
+'		if i2 = 1 then
+'			exit do
+'		else
+'			call ZMotor(fResult, 0)
+'		end if
+'	loop
+'	Call ZMotor( fResult, 0 )
+'	Call ZHOME( FRESULT )
+	'	fMoveResult = ZSet_PositionProfile(fResult, 100, 1, 30)
+
+'	For ZSetMotionParam
+'	First value: 	
+'	Second value: motion profile
+'	[50 ===>> Move to base of work postion																		]
+'	[60 ===>> Move for outward gripping with non-elastic work pieces											]
+'	[65 ===>> Move for outward gripping with elastic work pieces												]
+'	[70 ===>> Move for inward gripping with non-elastic work pieces												]
+'	[75 ===>> Move for inward gripping with elastic work pieces													]
+'	[80 ===>> Move for outward gripping, good for force control gripping										]
+'	[85 ===>> Move for outward gripping and constant force as motor is turned off once motion is completed		]
+'	[90 ===>> Move for inward gripping, good for force control gripping											]
+'	[95 ===>> Move for inward gripping and constant force as motor is turned off once motion is completed		]
+'	Third value: position tolerance (range 0 to 255.  Converts to 0.01mm to 2.55 mm)
+'	Fourth value: Gripper force, range 0 to 130%	
+'	Fifth value: Drive velocity, range 0 to 100%
+'	Sixth value: Base position, range 0.75 to max stroke of gripper + 0.75. Must be smaller than shift position
+'	Seventh value: Shift position, range 0.75 to max stroke of gripper + 0.75. Must be larger than the base position and smaller than the work position.
+'	Eighth value: Teach position, range 0.75 to max stroke of gripper + 0.75. Defines the target position of the work piece. This is optional.
+'	Ninth value: Work position, range 0.75 to max stroke of gripper + 0.75. Defines the maximum travel path of the gripper. Must be greater than the shift position.
+
+	dim motionprofile as variant
+	dim positiontolerance as variant
+	dim gripforce as variant
+	dim drivevelocity as variant
+	dim baseposition as variant
+	dim shiftposition as variant
+	dim teachposition as variant
+	dim workposition as variant
+
+	motionprofile = i[zmotionprofile]
+	positiontolerance = i[zpostolerance]
+	gripforce = i[zgripforce]
+	drivevelocity = i[zdrivevel]
+	baseposition = i[zposbase]
+	shiftposition = i[zposshift]
+	teachposition = i[zposteach]
+	workposition = i[zposwork]
+
+	fMoveResult = ZSetMotionParam( fResult, motionprofile, positiontolerance, gripforce, drivevelocity, baseposition, shiftposition, teachposition, workposition )
+
+	Call ZMotor( fResult, 1 )
+	
+	Call ZOpen( fResult )
+
+End Sub
