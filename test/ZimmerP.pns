@@ -1,0 +1,241 @@
+#include <PanelMain.h> raw
+#Include "Zimmer_Driver\Zimmer.h"
+dim fresult as variant
+dim fmoveresult as integer
+dim motionprofile as variant
+dim positiontolerance as variant
+dim gripforce as variant
+dim drivevelocity as variant
+dim baseposition as variant
+dim shiftposition as variant
+dim teachposition as variant
+dim workposition as variant
+
+
+Sub TIMER1_TIMER()
+
+if ZGet_MotorOn_Status(fresult) = 0 then
+	PL1.fg = &h000000
+else
+	PL1.fg = &h00FF00
+end if
+
+if ZGet_InMotion_Status( fResult ) = 0 then
+	PL2.fg = &h000000
+else
+	PL2.fg = &h00FF00
+end if
+
+if ZGet_BasePose_Status( fResult ) = 0 then
+	PL3.fg = &h000000
+else
+	PL3.fg = &h00FF00
+end if
+
+if ZGet_WorkPose_Status( fResult ) = 0 then
+	PL4.fg = &h000000
+else
+	PL4.fg = &h00FF00
+end if
+
+if ZGet_Error_Status( fResult ) = 0 then
+	PL5.fg = &h000000
+else
+	PL5.fg = &h0000FF
+end if
+
+End Sub
+
+Sub Panel_INITIALIZE()
+
+Dim IRStrAddr( 4 ) As Integer
+Dim HRStrAddr( 4 ) As Integer
+IRStrAddr( 0 ) = &h003 ' Port1 Inputs
+IRStrAddr( 1 ) = &h013 ' Port2 Inputs
+IRStrAddr( 2 ) = &h023 ' Port3 Inputs
+IRStrAddr( 3 ) = &h033 ' Port4 Inputs
+	
+HRStrAddr( 0 ) = &h802 ' Port1 Outputs
+HRStrAddr( 1 ) = &h812 ' Port2 Outputs
+HRStrAddr( 2 ) = &h822 ' Port3 Outputs
+HRStrAddr( 3 ) = &h832 ' Port4 Outputs
+fResult = ZConnect( "10.0.0.2", 1, IRStrAddr( 0 ), HRStrAddr( 0 ) )
+
+NB1.value = I51
+NB2.value = I52
+NB3.value = I53
+NB4.value = I54
+NB5.value = I55
+NB6.value = I56
+NB7.value = I57
+NB8.value = I58
+
+End Sub
+
+Sub TIMER2_TIMER()
+
+motionprofile = NB1.value
+
+if NB2.value > 0 AND NB2.value < 256 THEN
+	Label17.active = 0
+	positiontolerance = NB2.value
+else
+	Label17.active = 1
+end if
+
+if NB3.value > 0 AND NB3.value < 131 THEN
+	gripforce = NB3.value
+	Label18.active = 0
+else
+	Label18.active = 1
+end if
+
+if NB4.value > 0 AND NB4.value < 101 THEN
+	drivevelocity = NB4.value
+	Label19.active = 0
+else
+	Label19.active = 1
+end if
+
+if NB5.value < NB6.value then
+	Label20.active = 0
+	baseposition = NB5.value
+else
+	Label20.active = 1
+end if
+
+if NB6.value > NB5.value then
+	Label21.active = 0
+	shiftposition = NB6.value
+else
+	Label21.active = 1
+end if
+
+teachposition = NB7.value
+
+if NB8.value > NB6.value then
+	Label23.active = 0
+	workposition = NB8.value
+else
+	Label23.active = 1
+end if
+
+End Sub
+
+Sub IPB1_CLICKED()
+
+call ZMotor(fResult, 1)
+
+End Sub
+
+Sub IPB2_CLICKED()
+
+call ZMotor(fResult, 0)
+
+End Sub
+
+Sub IPB3_CLICKED()
+
+if ((Label16.active = 0) and (Label17.active = 0) and (Label18.active = 0) and (Label19.active = 0) and (Label20.active = 0) and (Label21.active = 0) and (Label22.active = 0) and (Label23.active = 0)) then
+	ipb3.caption = "Test Open Gripper"
+	call ZResetDirFlag( fResult)
+	fMoveResult = ZSetMotionParam( fResult, motionprofile, positiontolerance, gripforce, drivevelocity, baseposition, shiftposition, teachposition, workposition )
+	Call ZOpen( fResult )
+else
+	ipb3.caption = "Invalid Profile"
+end if
+
+End Sub
+
+Sub IPB4_CLICKED()
+if ((Label16.active = 0) and (Label17.active = 0) and (Label18.active = 0) and (Label19.active = 0) and (Label20.active = 0) and (Label21.active = 0) and (Label22.active = 0) and (Label23.active = 0)) then
+	ipb4.caption = "Test Close Gripper"
+	call ZResetDirFlag( fResult)
+	fMoveResult = ZSetMotionParam( fResult, motionprofile, positiontolerance, gripforce, drivevelocity, baseposition, shiftposition, teachposition, workposition )
+	Call ZClose( fResult )
+else
+	ipb4.caption = "Invalid Profile"
+end if 
+
+End Sub
+
+Sub IPB5_CLICKED()
+
+page_change ZimmerPSimple
+
+End Sub
+
+Sub FK1_CLICKED()
+
+call zhome(fresult)
+
+End Sub
+
+
+Sub FK2_CLICKED()
+
+page_change main
+
+End Sub
+#ifdef TP_DESIGNER
+'<<--TPDESIGNER_RESERVED-->>
+CAPTION=""
+BG=&HFFFFFF
+FG=&H000000
+TIMEOUT=2000
+TIMEOUTMODE=1
+RELEASEMODE=0
+PNLCCVER=232
+COLORTYPE=1
+FONTTYPE=1
+BORDERSTYLE=0
+CONTROLSORT=0
+add_widget 7,"Rect1",440,10,190,190,&H000000,&HB0B0B0,0,1,0,1;
+add_widget 2,"Label1",450,20,180,20,&H000000,&HFFFFFF,0,1,0,"STATUS",10,0,"Segoe UI","",1,1;
+add_widget 3,"PL1",450,50,20,20,&H00FF00,&H000000,0,1,2,"",16,0,1,"Segoe UI";
+add_widget 3,"PL2",450,80,20,20,&H00FF00,&H000000,0,1,2,"",16,0,1,"Segoe UI";
+add_widget 3,"PL3",450,110,20,20,&H00FF00,&H000000,0,1,2,"",16,0,1,"Segoe UI";
+add_widget 2,"Label2",480,50,130,20,&H000000,&HFFFFFF,0,1,0,"Motor Status",10,0,"Segoe UI","",1,1;
+add_widget 2,"Label3",480,80,130,20,&H000000,&HFFFFFF,0,1,0,"In Motion",10,0,"Segoe UI","",1,1;
+add_widget 3,"PL4",450,140,20,20,&H00FF00,&H000000,0,1,2,"",16,0,1,"Segoe UI";
+add_widget 2,"Label4",480,110,130,20,&H000000,&HFFFFFF,0,1,0,"Base Position",10,0,"Segoe UI","",1,1;
+add_widget 2,"Label5",480,140,130,20,&H000000,&HFFFFFF,0,1,0,"Work Position",10,0,"Segoe UI","",1,1;
+add_widget 3,"PL5",450,170,20,20,&H00FF00,&H000000,0,1,2,"",16,0,1,"Segoe UI";
+add_widget 2,"Label6",480,170,130,20,&H000000,&HFFFFFF,0,1,0,"Error Present",10,0,"Segoe UI","",1,1;
+add_widget 4,"Line1",500,40,80,0,&H000000,&HB0B0B0,0,1,0,1;
+add_widget 15,"Timer1",450,370,0,1,100;
+add_widget 2,"Label7",110,10,230,30,&H000000,&HB0B0B0,0,1,0,"Set Motion Profile",10,0,"Segoe UI","",1,1;
+add_widget 5,"NB1",50,60,160,20,&H000000,&HB0B0B0,0,3,0,"NB1",10,0,0,"Segoe UI";
+add_widget 2,"Label8",220,60,190,20,&H000000,&HB0B0B0,0,1,0,"Motion Profile",10,0,"Segoe UI","",1,1;
+add_widget 5,"NB2",50,90,160,20,&H000000,&HB0B0B0,0,3,0,"NB1",10,0,0,"Segoe UI";
+add_widget 2,"Label9",220,90,190,20,&H000000,&HB0B0B0,0,1,0,"Position Tolerance",10,0,"Segoe UI","",1,1;
+add_widget 5,"NB3",50,120,160,20,&H000000,&HB0B0B0,0,3,0,"NB1",10,0,0,"Segoe UI";
+add_widget 2,"Label10",220,120,190,20,&H000000,&HB0B0B0,0,1,0,"Gripper Force",10,0,"Segoe UI","",1,1;
+add_widget 5,"NB4",50,150,160,20,&H000000,&HB0B0B0,0,3,0,"NB1",10,0,0,"Segoe UI";
+add_widget 2,"Label11",220,150,190,20,&H000000,&HB0B0B0,0,1,0,"Drive Velocity",10,0,"Segoe UI","",1,1;
+add_widget 5,"NB5",50,180,160,20,&H000000,&HB0B0B0,0,3,0,"NB1",10,0,0,"Segoe UI";
+add_widget 2,"Label12",220,180,190,20,&H000000,&HB0B0B0,0,1,0,"Base Position",10,0,"Segoe UI","",1,1;
+add_widget 5,"NB6",50,210,160,20,&H000000,&HB0B0B0,0,3,0,"NB1",10,0,0,"Segoe UI";
+add_widget 2,"Label13",220,210,190,20,&H000000,&HB0B0B0,0,1,0,"Shift Position",10,0,"Segoe UI","",1,1;
+add_widget 5,"NB7",50,240,160,20,&H000000,&HB0B0B0,0,3,0,"NB1",10,0,0,"Segoe UI";
+add_widget 2,"Label14",220,240,190,20,&H000000,&HB0B0B0,0,1,0,"Teach Position",10,0,"Segoe UI","",1,1;
+add_widget 5,"NB8",50,270,160,20,&H000000,&HB0B0B0,0,3,0,"NB1",10,0,0,"Segoe UI";
+add_widget 2,"Label15",220,270,190,20,&H000000,&HB0B0B0,0,1,0,"Work Position",10,0,"Segoe UI","",1,1;
+add_widget 17,"IPB1",440,210,190,30,&H00FF00,&H000000,0,3,1,"Turn Motor On",12,0,1,"Segoe UI";
+add_widget 17,"IPB2",440,250,190,30,&H0000FF,&H000000,0,3,1,"Turn Motor Off",12,0,1,"Segoe UI";
+add_widget 17,"IPB3",440,290,190,30,&H00FF00,&H000000,0,3,1,"Test Open Gripper",12,0,1,"Segoe UI";
+add_widget 17,"IPB4",440,330,190,30,&H00FF00,&H000000,0,3,1,"Test Close Gripper",12,0,1,"Segoe UI";
+add_widget 17,"IPB5",20,330,390,30,&H00D7FF,&H000000,0,3,1,"Click Here For Simple Mode",12,0,1,"Segoe UI";
+add_widget 15,"Timer2",490,370,0,1,100;
+add_widget 12,"FK1","HOME",1;
+add_widget 12,"FK2","MAIN",6;
+add_widget 2,"Label16",20,60,20,20,&H0000FF,&HFFFFFF,0,0,0,"!",14,0,"Segoe UI","",1,1;
+add_widget 2,"Label17",20,90,20,20,&H0000FF,&HFFFFFF,0,0,0,"!",14,0,"Segoe UI","",1,1;
+add_widget 2,"Label18",20,120,20,20,&H0000FF,&HFFFFFF,0,0,0,"!",14,0,"Segoe UI","",1,1;
+add_widget 2,"Label19",20,150,20,20,&H0000FF,&HFFFFFF,0,0,0,"!",14,0,"Segoe UI","",1,1;
+add_widget 2,"Label20",20,180,20,20,&H0000FF,&HFFFFFF,0,0,0,"!",14,0,"Segoe UI","",1,1;
+add_widget 2,"Label21",20,210,20,20,&H0000FF,&HFFFFFF,0,0,0,"!",14,0,"Segoe UI","",1,1;
+add_widget 2,"Label22",20,240,20,20,&H0000FF,&HFFFFFF,0,0,0,"!",14,0,"Segoe UI","",1,1;
+add_widget 2,"Label23",20,270,20,20,&H0000FF,&HFFFFFF,0,0,0,"!",14,0,"Segoe UI","",1,1;
+'<<--TPDESIGNER_RESERVED-->>
+#endif

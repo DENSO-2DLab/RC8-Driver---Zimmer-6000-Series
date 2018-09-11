@@ -1,0 +1,111 @@
+'!TITLE "Denso robot program"
+
+#Include "Zimmer_Driver/Zimmer.h"
+
+Dim IRStrAddr(4) As Integer
+Dim HRStrAddr(4) As Integer
+
+Sub Main
+
+'	' Zimmer Variables
+'	Dim ctrl_word As Integer
+'	Dim device_mode As Integer
+'	Dim workpiece_no As Integer
+'	Dim position_tolerance As Integer
+'	Dim gripping_force As Integer
+'	Dim drive_velocity As Integer
+'	Dim base_position As Integer
+'	Dim shift_position As Integer
+'	Dim teach_position As Integer
+'	Dim work_position As Integer
+'	Dim status_word As Integer
+'	Dim diagnostics As Integer
+'	Dim actual_position As Single
+
+	IRStrAddr(0) = &h003	' Port1 Inputs
+	IRStrAddr(1) = &h013	' Port2 Inputs
+	IRStrAddr(2) = &h023	' Port3 Inputs
+	IRStrAddr(3) = &h033	' Port4 Inputs
+
+	HRStrAddr(0) = &h802	' Port1 Outputs
+	HRStrAddr(1) = &h812	' Port2 Outputs
+	HRStrAddr(2) = &h822	' Port3 Outputs
+	HRStrAddr(3) = &h832	' Port4 Outputs
+
+	Dim fResult As Variant 
+	fResult = ZConnect("10.0.0.2", 1, IRStrAddr(0), HRStrAddr(0))
+
+'	' --- INPUTS REGISTERS ---
+'	status_word = ZGet_Status(fResult)
+'
+'	Dim fStatus(15) As Integer
+'	fStatus(0) = ZGet_HomePoseOK_Status(fResult)
+'	fStatus(1) = ZGet_MotorOn_Status(fResult)
+'	fStatus(2) = ZGet_InMotion_Status(fResult)
+'	fStatus(3) = ZGet_CompleteMovement_Status(fResult) 
+'	fStatus(4) = ZGet_NJogModeActive_Status(fResult)
+'	fStatus(5) = ZGet_PJogModeActive_Status(fResult)
+'	fStatus(6) = ZGet_GripCtrlSysActive_Status(fResult)
+'	fStatus(7) = ZGet_CtrlError_Status(fResult)
+'	fStatus(8) = ZGet_BasePose_Status(fResult)
+'	fStatus(9) = ZGet_TeachPose_Status(fResult)
+'	fStatus(10) = ZGet_WorkPose_Status(fResult)
+'	fStatus(11) = ZGet_UndefPose_Status(fResult)
+'	fStatus(12) = ZGet_DataTransferOK_Status(fResult)
+'	fStatus(13) = ZGet_CtrlWordx100_Status(fResult)
+'	fStatus(14) = ZGet_CtrlWordx200_Status(fResult)
+'	fStatus(15) = ZGet_Error_Status(fResult)
+'	
+'	diagnostics = ZGet_Diagnostics(fResult)
+'	actual_position = ZGet_CurPos(fResult)
+'
+'	' --- HOLDING REGISTERS (READ) --- 
+'	ctrl_word = ZGet_CtrlWord(fResult)
+'	device_mode = ZGet_DeviceMode(fResult)
+'	workpiece_no = ZGet_WorkpieceNo(fResult)
+'	position_tolerance = ZGet_PoseTolerance(fResult)
+'	gripping_force = ZGet_GripForce(fResult)
+'	drive_velocity = ZGet_DriveVelocity(fResult)
+'	base_position = ZGet_BasePose(fResult)
+'	shift_position = ZGet_ShiftPose(fResult)
+'	teach_position = ZGet_TeachPose(fResult)
+'	work_position = ZGet_WorkPose(fResult)
+
+'	' --- HOLDING REGISTERS (WRITE) --- 
+'	Call ZSet_CtrlWord(fResult, 1)
+'	Call ZSet_DeviceMode(fResult, 2)
+'	Call ZSet_WorkpieceNo(fResult, 33)
+'	Call ZSet_PoseTolerance(fResult, 1)
+'	Call ZSet_GripForce(fResult, 1)
+'	Call ZSet_DriveVelocity(fResult, 1)
+'	Call ZSet_BasePose(fResult, 1)
+'	Call ZSet_ShiftPose(fResult, 1)
+'	Call ZSet_TeachPose(fResult, 1)
+'	Call ZSet_WorkPose(fResult, 1)
+
+	' Set Motion Profile
+	Dim fMoveResult As Integer
+	Dim motionProfile As Variant = 50
+	Dim posTolerance As Variant = 1
+	Dim gripForce As Variant = 10
+	Dim driveV As Variant = 100
+	Dim posBase As Variant = 1
+	Dim posShift As Variant = 100
+	Dim posTeach As Variant = 250
+	Dim posWork As Variant = 300
+
+	Call ZMotor(fResult, 0)
+''	fMoveResult = ZSet_PositionProfile(fResult, 100, 1, 30)
+ 	fMoveResult = ZSetMotionParam(fResult, motionProfile, posTolerance, gripForce, driveV, posBase, posShift, posTeach, posWork)
+'
+	Call ZMotor(fResult, 1)
+	Call ZClose(fResult)
+	Call ZOpen(fResult)
+	Call ZClose(fResult)
+	Call ZOpen(fResult)
+'	Call ZClose(fResult)
+'	Call ZOpen(fResult)
+
+'	Call ZSet_CtrlWord(fResult, 256)
+'	Call ZSet_CtrlWord(fResult, 512)
+End Sub
