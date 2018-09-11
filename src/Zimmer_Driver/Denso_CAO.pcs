@@ -1,0 +1,188 @@
+'!TITLE "DENSO Utility Functions"
+
+'RC8 DENSO Utility Functions----------------------------------------------------
+' @file    Denso_CAO.pcs
+' @brief   DENSO Utility functions for ORiN provider 
+' @details https://github.com/DENSO-2DLab/RC8_Driver-Zimmer_6000_Series
+'
+' @version 1.0.0
+' @date    2017/10/05
+' @author  Carlos A. Lopez (DPAM - R&D)	
+'
+' Software License Agreement (MIT License)
+'
+' @copyright Copyright (c) 2018 DENSO 2DLab
+'
+' Permission is hereby granted, free of charge, to any person obtaining a copy
+' of this software and associated documentation files (the "Software"), to deal
+' in the Software without restriction, including without limitation the rights
+' to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+' copies of the Software, and to permit persons to whom the Software is
+' furnished to do so, subject to the following conditions:
+'
+' The above copyright notice and this permission notice shall be included in
+' all copies or substantial portions of the Software.
+'
+' THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+' IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+' FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+' AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+' LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+' OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+' THE SOFTWARE.
+'-------------------------------------------------------------------------------
+
+' ****************************************************************************************
+' *---PRIVATE FUNCTIONS------------------------------------------------------------------*
+' ****************************************************************************************
+
+'----------------------------------------------------------------------------------------
+' zExtractObjElement
+'----------------------------------------------------------------------------------------
+Function zExtractObjElement(ObjArray As Variant,_
+							RowIndex As Integer,_
+							ColumnIndex As Integer)_
+							As Object
+
+	' Extract InputData Array
+	Dim InputDataArray As Variant
+	InputDataArray = ObjArray(RowIndex)				
+
+	' Extract First Element of Input Data Array
+	Dim RegisterNo As Object
+	RegisterNo = InputDataArray(ColumnIndex)		
+
+	' Return Object Element
+	zExtractObjElement = RegisterNo
+End Function
+
+'----------------------------------------------------------------------------------------
+' zExtractBit
+'----------------------------------------------------------------------------------------
+Function zExtractBit(Number As Integer, Digit As Integer) As Integer
+	' Get Bit Value from Number
+	zExtractBit = Number AND Pow(2, Digit)
+	
+	' Return Bit state
+	If (zExtractBit) Then
+		zExtractBit = 1
+	Else
+		zExtractBit = 0
+	End If
+End Function
+
+'----------------------------------------------------------------------------------------
+' zGetLSB
+'---------------------------------------------------------------------------------------- 
+Function zGetLSB(Number As Integer) As Integer
+	Number = Number AND &h00FF	' Clear MSBs (Top Byte)
+	zGetLSB = Number			' Return LSB
+End Function
+
+'----------------------------------------------------------------------------------------
+' zSetLSB
+'----------------------------------------------------------------------------------------
+Function zSetLSB(Number As Integer, newLSB As Variant) As Integer
+	Number = Number AND &hFF00	' Clear LSBs (Bottom Byte)
+	zSetLSB = newLSB OR Number	' Merge new LSB with curr MSB
+End Function
+
+'----------------------------------------------------------------------------------------
+' zGetMSB
+'----------------------------------------------------------------------------------------
+Function zGetMSB(Number As Integer) As Integer
+	Number = Number AND &hFF00	' Clear LSBs (Bottom Byte)
+	zGetMSB = Number >> 8		' Shift new value to LSB (Bottop Byte)
+End Function
+
+'----------------------------------------------------------------------------------------
+' zSetMSB
+'----------------------------------------------------------------------------------------
+Function zSetMSB(Number As Integer, newMSB As Variant) As Integer
+	Number = Number AND &h00FF	' Clear MSBs (Top Byte)
+	newMSB = newMSB << 8		' Shift new value to MSB (Top Byte)
+	zSetMSB = newMSB OR Number	' Merge new MSB with curr LSB
+End Function
+
+'----------------------------------------------------------------------------------------
+' zInRange
+'----------------------------------------------------------------------------------------
+Function zInRange(Number As Variant, minVal As Integer, maxVal As Integer) As Integer
+	If ((Number >= minVal) AND (Number <= maxVal)) Then 
+		zInRange = 1
+	Else
+		zInRange = 0
+	End If 
+End Function
+
+'----------------------------------------------------------------------------------------
+' zIPValid
+'----------------------------------------------------------------------------------------
+Function zIPValid(IPAddress As String) As Integer
+	Dim IPSegment As Variant
+	Dim IP_InRange As Integer = 0
+
+	IPSegment = Split(IPAddress, ".")
+
+	Dim n As Integer = 0
+	For n=0 To Ubound(IPSegment)
+		IP_InRange = IP_InRange + zInRange(Val(IPSegment(n)), 0, 255)		
+	Next n
+
+	If (((Ubound(IPSegment) + 1) = 4) AND (IP_InRange = 4)) Then 
+		zIPValid = 1
+	Else
+		zIPValid = 0
+	End If
+End Function
+
+' ***************************************************************************************
+' *---CAO FUNCTIONS---------------------------------------------------------------------*
+' ***************************************************************************************
+
+'----------------------------------------------------------------------------------------
+' CaoWorkspace::AddController()
+'----------------------------------------------------------------------------------------
+Function Cao_AddController(IOMasterIPAddr As String) As Object
+	Dim caoCtrlName As String
+	Dim caoProv As String
+	
+	' CaoController Parameters
+	caoCtrlName = IOMasterIPAddr
+	caoProv = "CaoProv.Modbus.X"
+	IOMasterIPAddr = Sprintf("Conn=eth:%s, @IfNotMember", IOMasterIPAddr)
+
+	Cao_AddController = Cao.AddController(caoCtrlName, caoProv, "", IOMasterIPAddr)
+End Function
+
+'----------------------------------------------------------------------------------------
+' CaoController::AddExtension()
+'----------------------------------------------------------------------------------------
+Function Cao_AddExtension(CaoCtrl As Object, ZimExt As String) As Object
+	' CaoExtension Parameters
+	Dim ExtOpt As String		' CaoExtension Option
+	ExtOpt = Sprintf("UnitAddress=%d, @IfNotMember", Right(ZimExt,1))
+
+	Cao_AddExtension = CaoCtrl.AddExtension(ZimExt, ExtOpt)							
+End Function
+
+'----------------------------------------------------------------------------------------
+' CaoExtension::AddVariable
+'----------------------------------------------------------------------------------------
+Function Cao_AddVariable(CaoExt As Object, CaoVarName As String) As Object
+	 Cao_AddVariable = CaoExt.AddVariable(CaoVarName, "@IfNotMember")
+End Function
+
+'----------------------------------------------------------------------------------------
+' CaoVariable.Value (Get)
+'----------------------------------------------------------------------------------------
+Function Cao_GetVariable(CaoVar As Object) As Integer
+	Cao_GetVariable = CaoVar.Value
+End Function
+
+'----------------------------------------------------------------------------------------
+' CaoVariable.Value (Set)
+'----------------------------------------------------------------------------------------
+Function Cao_SetVariable(CaoVar As Object, newValue As Variant) As Integer
+	CaoVar.Value = newValue
+End Function
